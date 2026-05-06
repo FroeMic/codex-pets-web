@@ -10,6 +10,7 @@ export { preloadPet } from "./preload.js";
 export { createCodexPetAnimator } from "./animator.js";
 export { createCodexPetDragController } from "./drag.js";
 export { createCodexPetElement } from "./dom.js";
+export { createCodexPetRegistry } from "./registry.js";
 export {
   CODEX_PET_EXAMPLES,
   getCodexPetExample,
@@ -20,6 +21,8 @@ export type {
   CodexPetAnimator,
   CodexPetAnimatorOptions,
   CodexPetAtlas,
+  CodexPetConfig,
+  CodexPetController,
   CodexPetDragController,
   CodexPetDragEvent,
   CodexPetDragOptions,
@@ -29,15 +32,20 @@ export type {
   CodexPetFloatingOptions,
   CodexPetFrame,
   CodexPetFrameStyle,
+  CodexPetId,
   CodexPetManifest,
   CodexPetPlayOptions,
   CodexPetPosition,
+  CodexPetRegistry,
+  CodexPetRegistryListener,
   CodexPetSetStateOptions,
+  CodexPetSnapshot,
   CodexPetState,
   CodexPetStateChangeEvent,
   CodexPetStateConfig,
   CodexPetStateFps,
   CreateCodexPetElementOptions,
+  CreateCodexPetRegistryOptions,
   GetPetFrameOptions,
   GetPetFrameStyleOptions,
   ReducedMotionPreference

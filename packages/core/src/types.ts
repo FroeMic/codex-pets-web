@@ -109,6 +109,10 @@ export interface CodexPetDragOptions {
   onDragEnd?: (event: CodexPetDragEvent) => void;
 }
 
+export type CodexPetId = string;
+
+export type CodexPetRegistryListener = () => void;
+
 export interface CodexPetAnimatorOptions {
   spritesheetUrl: string;
   state?: CodexPetState;
@@ -134,6 +138,27 @@ export interface CreateCodexPetElementOptions
   ariaLabel?: string;
   floating?: boolean | CodexPetFloatingOptions;
   draggable?: boolean | CodexPetDragOptions;
+}
+
+export interface CodexPetConfig extends CodexPetAnimatorOptions {
+  floating?: boolean | CodexPetFloatingOptions;
+  draggable?: boolean | CodexPetDragOptions;
+  hidden?: boolean;
+}
+
+export interface CodexPetSnapshot {
+  id: CodexPetId;
+  spritesheetUrl: string;
+  state: CodexPetState;
+  baseState: CodexPetState;
+  frame: number;
+  scale: number;
+  fps: number;
+  position: CodexPetPosition | null;
+  hidden: boolean;
+  mounted: boolean;
+  paused: boolean;
+  removed: boolean;
 }
 
 export interface CodexPetAnimator {
@@ -164,4 +189,34 @@ export interface CodexPetElement {
   element: HTMLDivElement;
   animator: CodexPetAnimator;
   dragController?: CodexPetDragController;
+}
+
+export interface CodexPetController {
+  readonly id: CodexPetId;
+  bind(element: HTMLElement): void;
+  unbind(element?: HTMLElement): void;
+  play(state: CodexPetState, options?: CodexPetPlayOptions): void;
+  setState(state: CodexPetState, options?: CodexPetSetStateOptions): void;
+  setConfig(config: Partial<CodexPetConfig>): void;
+  setPosition(position: CodexPetPosition): void;
+  hide(): void;
+  show(): void;
+  remove(): void;
+  getSnapshot(): CodexPetSnapshot;
+  subscribe(listener: CodexPetRegistryListener): () => void;
+}
+
+export interface CreateCodexPetRegistryOptions {
+  defaultPetId?: CodexPetId;
+  pets?: Record<CodexPetId, CodexPetConfig>;
+}
+
+export interface CodexPetRegistry {
+  readonly defaultPetId: CodexPetId;
+  get(id?: CodexPetId): CodexPetController;
+  has(id?: CodexPetId): boolean;
+  register(id: CodexPetId, config: CodexPetConfig): CodexPetController;
+  remove(id?: CodexPetId): void;
+  list(): CodexPetController[];
+  subscribe(listener: CodexPetRegistryListener): () => void;
 }
