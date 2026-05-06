@@ -8,18 +8,24 @@ export {
 } from "./frame.js";
 export { preloadPet } from "./preload.js";
 export { createCodexPetAnimator } from "./animator.js";
+export { createCodexPetDragController } from "./drag.js";
 export { createCodexPetElement } from "./dom.js";
 export type {
   CodexPetAnimationEvent,
   CodexPetAnimator,
   CodexPetAnimatorOptions,
   CodexPetAtlas,
+  CodexPetDragController,
+  CodexPetDragEvent,
+  CodexPetDragOptions,
   CodexPetElement,
   CodexPetErrorEvent,
+  CodexPetFloatingOptions,
   CodexPetFrame,
   CodexPetFrameStyle,
   CodexPetManifest,
   CodexPetPlayOptions,
+  CodexPetPosition,
   CodexPetState,
   CodexPetStateChangeEvent,
   CodexPetStateConfig,

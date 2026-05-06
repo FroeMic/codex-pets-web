@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0
+
+- Added floating pet positioning and pointer dragging to `codex-pet-web`.
+- Added React `floating`, `draggable`, and pet drag callback props.
+- Added drag-direction animation that switches to running-left or running-right.
+- Reduced the demo pet size, slowed default animation, and changed the stage to a dotted canvas.
+
 ## 0.1.0
 
 - Split the project into an npm workspace monorepo.

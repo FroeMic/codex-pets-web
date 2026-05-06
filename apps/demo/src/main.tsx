@@ -24,7 +24,7 @@ function App() {
   const [pets, setPets] = useState<DemoPet[]>([]);
   const [selectedPetId, setSelectedPetId] = useState("");
   const [state, setState] = useState<CodexPetState>("idle");
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.5);
   const [fps, setFps] = useState(4);
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -68,35 +68,34 @@ function App() {
     <main className="app-shell">
       <section className="stage" aria-label="Codex pet preview">
         {selectedPet ? (
-          <button
-            className="pet-button"
-            type="button"
-            onClick={() => petRef.current?.play("waving", { loops: 1 })}
-            aria-label={`Ask ${selectedPet.displayName} to wave`}
-          >
-            <CodexPet
-              ref={petRef}
-              aria-label={selectedPet.displayName}
-              fps={fps}
-              manifest={selectedPet}
-              paused={paused}
-              reducedMotion={reducedMotion}
-              scale={scale}
-              spritesheetUrl={selectedPet.spritesheetUrl}
-              state={state}
-              onAnimationEnd={({ state: endedState }) =>
-                recordEvent(`ended ${endedState}`)
-              }
-              onAnimationLoop={({ state: loopState, loop }) =>
-                recordEvent(`loop ${loopState} #${loop}`)
-              }
-              onError={({ error: petError }) => setError(petError.message)}
-              onReady={() => recordEvent(`loaded ${selectedPet.displayName}`)}
-              onStateChange={({ state: nextState }) =>
-                recordEvent(`state ${nextState}`)
-              }
-            />
-          </button>
+          <CodexPet
+            ref={petRef}
+            aria-label={selectedPet.displayName}
+            className="pet-preview"
+            draggable
+            floating={{ x: 40, y: 40, zIndex: 20 }}
+            fps={fps}
+            manifest={selectedPet}
+            paused={paused}
+            reducedMotion={reducedMotion}
+            scale={scale}
+            spritesheetUrl={selectedPet.spritesheetUrl}
+            state={state}
+            onAnimationEnd={({ state: endedState }) =>
+              recordEvent(`ended ${endedState}`)
+            }
+            onAnimationLoop={({ state: loopState, loop }) =>
+              recordEvent(`loop ${loopState} #${loop}`)
+            }
+            onError={({ error: petError }) => setError(petError.message)}
+            onPetDragEnd={({ x, y }) =>
+              recordEvent(`position ${Math.round(x)}, ${Math.round(y)}`)
+            }
+            onReady={() => recordEvent(`loaded ${selectedPet.displayName}`)}
+            onStateChange={({ state: nextState }) =>
+              recordEvent(`state ${nextState}`)
+            }
+          />
         ) : (
           <div className="empty-state">
             <strong>No pets copied yet.</strong>
@@ -145,7 +144,7 @@ function App() {
           Scale
           <input
             max="4"
-            min="0.5"
+            min="0.25"
             step="0.25"
             type="range"
             value={scale}

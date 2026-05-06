@@ -62,6 +62,13 @@ npm run build
 npm run pack:dry
 ```
 
+## Floating Pets
+
+Both packages support fixed-position pets that can be dragged across the
+viewport. Use `floating` and `draggable` in React, or the same options with
+`createCodexPetElement` in the core package. Dragging automatically switches the
+sprite to `running-left` or `running-right` based on movement direction.
+
 ## Publishing
 
 Dry-run package contents first:
@@ -84,4 +91,4 @@ npm publish -w packages/core --access public
 npm publish -w packages/react --access public
 ```
 
-Both public packages start at `0.1.0`.
+The latest release line is `0.2.x`.

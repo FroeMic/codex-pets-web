@@ -17,7 +17,7 @@ npm view codex-pet-web version
 npm view codex-pet-web-react version
 ```
 
-Both public packages start at `0.1.0`.
+The latest release line is `0.2.x`.
 
 Trusted Publishing is preferred over long-lived npm tokens. Configure it on
 npmjs.com for each published package:

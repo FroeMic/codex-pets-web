@@ -23,6 +23,26 @@ document.body.append(element);
 animator.play("waving", { loops: 1 });
 ```
 
+## Floating And Dragging
+
+```ts
+const { element, dragController } = createCodexPetElement({
+  spritesheetUrl: "/pets/vertical/spritesheet.webp",
+  floating: { x: 24, y: 24, zIndex: 100 },
+  draggable: {
+    onDragEnd: ({ x, y }) => {
+      console.log("pet position", x, y);
+    }
+  }
+});
+
+document.body.append(element);
+dragController?.setPosition({ x: 48, y: 48 });
+```
+
+Dragging temporarily switches the pet to `running-left` or `running-right`
+based on horizontal movement, then restores its previous base state on release.
+
 ## Pure Frame Math
 
 ```ts

@@ -1,6 +1,6 @@
 {
   "name": "codex-pet-web-react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "React wrapper for Codex pet spritesheets.",
   "license": "MIT",
   "author": "FroeMic",
@@ -34,7 +34,7 @@
     "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
-    "codex-pet-web": "^0.1.0"
+    "codex-pet-web": "^0.2.0"
   },
   "peerDependencies": {
     "react": "^18.3.0 || ^19.0.0"

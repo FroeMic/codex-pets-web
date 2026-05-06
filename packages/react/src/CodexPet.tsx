@@ -1,10 +1,16 @@
 import {
   createCodexPetAnimator,
+  createCodexPetDragController,
   type CodexPetAnimationEvent,
   type CodexPetAnimator,
+  type CodexPetDragController,
+  type CodexPetDragEvent,
+  type CodexPetDragOptions,
   type CodexPetErrorEvent,
+  type CodexPetFloatingOptions,
   type CodexPetManifest,
   type CodexPetPlayOptions,
+  type CodexPetPosition,
   type CodexPetState,
   type CodexPetStateChangeEvent,
   type ReducedMotionPreference
@@ -24,6 +30,10 @@ type NativeDivProps = Omit<
   | "children"
   | "onAnimationStart"
   | "onAnimationEnd"
+  | "onDrag"
+  | "onDragStart"
+  | "onDragEnd"
+  | "draggable"
   | "onError"
 >;
 
@@ -32,6 +42,8 @@ export interface CodexPetHandle {
   setState(state: CodexPetState): void;
   pause(): void;
   resume(): void;
+  setPosition(position: CodexPetPosition): void;
+  getPosition(): CodexPetPosition | null;
   getState(): CodexPetState;
   getBaseState(): CodexPetState;
 }
@@ -45,6 +57,8 @@ export interface CodexPetProps extends NativeDivProps {
   paused?: boolean;
   reducedMotion?: ReducedMotionPreference;
   imageRendering?: CSSProperties["imageRendering"];
+  floating?: boolean | CodexPetFloatingOptions;
+  draggable?: boolean | CodexPetDragOptions;
   preload?: boolean;
   onReady?: () => void;
   onError?: (event: CodexPetErrorEvent) => void;
@@ -53,6 +67,9 @@ export interface CodexPetProps extends NativeDivProps {
   onAnimationLoop?: (event: CodexPetAnimationEvent) => void;
   onAnimationEnd?: (event: CodexPetAnimationEvent) => void;
   onFrameChange?: (event: CodexPetAnimationEvent) => void;
+  onPetDragStart?: (event: CodexPetDragEvent) => void;
+  onPetDrag?: (event: CodexPetDragEvent) => void;
+  onPetDragEnd?: (event: CodexPetDragEvent) => void;
 }
 
 export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
@@ -66,6 +83,8 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
       paused = false,
       reducedMotion = "user-preference",
       imageRendering = "pixelated",
+      floating,
+      draggable,
       preload = true,
       onReady,
       onError,
@@ -74,6 +93,9 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
       onAnimationLoop,
       onAnimationEnd,
       onFrameChange,
+      onPetDragStart,
+      onPetDrag,
+      onPetDragEnd,
       className,
       style,
       role,
@@ -85,6 +107,10 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
   ) {
     const elementRef = useRef<HTMLDivElement>(null);
     const animatorRef = useRef<CodexPetAnimator | null>(null);
+    const dragControllerRef = useRef<CodexPetDragController | null>(null);
+    const stateBeforeDragRef = useRef<CodexPetState | null>(null);
+    const initialFloatingRef = useRef(floating);
+    const initialDraggableRef = useRef(draggable);
     const callbacksRef = useLatest({
       onReady,
       onError,
@@ -92,7 +118,10 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
       onAnimationStart,
       onAnimationLoop,
       onAnimationEnd,
-      onFrameChange
+      onFrameChange,
+      onPetDragStart,
+      onPetDrag,
+      onPetDragEnd
     });
 
     useEffect(() => {
@@ -131,6 +160,61 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
         animator.destroy();
         if (animatorRef.current === animator) {
           animatorRef.current = null;
+        }
+      };
+    }, []);
+
+    useEffect(() => {
+      const element = elementRef.current;
+      const initialFloating = initialFloatingRef.current;
+      const initialDraggable = initialDraggableRef.current;
+
+      if (!element || (!initialFloating && !initialDraggable)) {
+        return;
+      }
+
+      const dragOptions =
+        typeof initialDraggable === "object" ? initialDraggable : {};
+      const dragController = createCodexPetDragController(element, {
+        floating: initialFloating,
+        draggable: initialDraggable
+          ? {
+              ...dragOptions,
+              onDragStart: (event: CodexPetDragEvent) => {
+                stateBeforeDragRef.current =
+                  animatorRef.current?.getBaseState() ?? null;
+                dragOptions.onDragStart?.(event);
+                callbacksRef.current.onPetDragStart?.(event);
+              },
+              onDrag: (event: CodexPetDragEvent) => {
+                if (event.deltaX > 0) {
+                  animatorRef.current?.setBaseState("running-right");
+                } else if (event.deltaX < 0) {
+                  animatorRef.current?.setBaseState("running-left");
+                }
+
+                dragOptions.onDrag?.(event);
+                callbacksRef.current.onPetDrag?.(event);
+              },
+              onDragEnd: (event: CodexPetDragEvent) => {
+                if (stateBeforeDragRef.current) {
+                  animatorRef.current?.setBaseState(stateBeforeDragRef.current);
+                  stateBeforeDragRef.current = null;
+                }
+
+                dragOptions.onDragEnd?.(event);
+                callbacksRef.current.onPetDragEnd?.(event);
+              }
+            }
+          : false
+      });
+
+      dragControllerRef.current = dragController;
+
+      return () => {
+        dragController.destroy();
+        if (dragControllerRef.current === dragController) {
+          dragControllerRef.current = null;
         }
       };
     }, []);
@@ -178,6 +262,10 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
         resume: () => {
           animatorRef.current?.resume();
         },
+        setPosition: (position) => {
+          dragControllerRef.current?.setPosition(position);
+        },
+        getPosition: () => dragControllerRef.current?.getPosition() ?? null,
         getState: () => animatorRef.current?.getState() ?? state,
         getBaseState: () => animatorRef.current?.getBaseState() ?? state
       }),

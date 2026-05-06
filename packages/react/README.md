@@ -26,6 +26,31 @@ export function PetPreview() {
 }
 ```
 
+## Floating And Dragging
+
+```tsx
+<CodexPet
+  draggable
+  floating={{ x: 24, y: 24, zIndex: 100 }}
+  spritesheetUrl="/pets/vertical/spritesheet.webp"
+  onPetDragEnd={({ x, y }) => {
+    console.log("pet position", x, y);
+  }}
+/>
+```
+
+Use a ref to move a floating pet programmatically:
+
+```tsx
+const ref = useRef<CodexPetHandle>(null);
+
+ref.current?.setPosition({ x: 48, y: 48 });
+```
+
+During drag, horizontal movement automatically switches the pet to
+`running-left` or `running-right`, then restores the previous base state when
+the pointer is released.
+
 ## Controlled State
 
 ```tsx

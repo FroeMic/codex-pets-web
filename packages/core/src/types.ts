@@ -72,6 +72,29 @@ export interface CodexPetPlayOptions {
   returnTo?: CodexPetState;
 }
 
+export interface CodexPetPosition {
+  x: number;
+  y: number;
+}
+
+export interface CodexPetDragEvent extends CodexPetPosition {
+  deltaX: number;
+  deltaY: number;
+  originalEvent: PointerEvent | MouseEvent;
+}
+
+export interface CodexPetFloatingOptions extends Partial<CodexPetPosition> {
+  zIndex?: number;
+  constrainToViewport?: boolean;
+}
+
+export interface CodexPetDragOptions {
+  constrainToViewport?: boolean;
+  onDragStart?: (event: CodexPetDragEvent) => void;
+  onDrag?: (event: CodexPetDragEvent) => void;
+  onDragEnd?: (event: CodexPetDragEvent) => void;
+}
+
 export interface CodexPetAnimatorOptions {
   spritesheetUrl: string;
   state?: CodexPetState;
@@ -94,6 +117,8 @@ export interface CreateCodexPetElementOptions
   extends CodexPetAnimatorOptions {
   className?: string;
   ariaLabel?: string;
+  floating?: boolean | CodexPetFloatingOptions;
+  draggable?: boolean | CodexPetDragOptions;
 }
 
 export interface CodexPetAnimator {
@@ -113,7 +138,14 @@ export interface CodexPetAnimator {
   destroy(): void;
 }
 
+export interface CodexPetDragController {
+  setPosition(position: CodexPetPosition): void;
+  getPosition(): CodexPetPosition;
+  destroy(): void;
+}
+
 export interface CodexPetElement {
   element: HTMLDivElement;
   animator: CodexPetAnimator;
+  dragController?: CodexPetDragController;
 }

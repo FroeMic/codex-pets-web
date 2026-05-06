@@ -128,4 +128,75 @@ describe("CodexPet", () => {
 
     unmount();
   });
+
+  it("supports floating drag props and imperative positioning", () => {
+    const ref = { current: null as CodexPetHandle | null };
+    const events: string[] = [];
+    const { host, unmount } = render(
+      <CodexPet
+        ref={ref}
+        aria-label="Vertical pet"
+        draggable
+        floating={{ x: 18, y: 24, zIndex: 30 }}
+        manifest={manifest}
+        paused
+        spritesheetUrl="/pets/vertical/spritesheet.webp"
+        onPetDrag={({ x, y }) => events.push(`${x}:${y}`)}
+      />
+    );
+
+    const pet = host.querySelector("[data-codex-pet]") as HTMLDivElement;
+    expect(pet.style.position).toBe("fixed");
+    expect(pet.style.zIndex).toBe("30");
+    expect(ref.current?.getPosition()).toEqual({ x: 18, y: 24 });
+
+    act(() => {
+      pet.dispatchEvent(
+        new MouseEvent("pointerdown", {
+          bubbles: true,
+          button: 0,
+          clientX: 20,
+          clientY: 30
+        })
+      );
+      window.dispatchEvent(
+        new MouseEvent("pointermove", {
+          bubbles: true,
+          clientX: 40,
+          clientY: 50
+        })
+      );
+    });
+
+    expect(ref.current?.getPosition()).toEqual({ x: 38, y: 44 });
+    expect(ref.current?.getBaseState()).toBe("running-right");
+    expect(pet.style.transform).toBe("translate3d(38px, 44px, 0)");
+    expect(events).toContain("38:44");
+
+    act(() => {
+      window.dispatchEvent(
+        new MouseEvent("pointermove", {
+          bubbles: true,
+          clientX: 10,
+          clientY: 50
+        })
+      );
+    });
+
+    expect(ref.current?.getBaseState()).toBe("running-left");
+
+    act(() => {
+      window.dispatchEvent(
+        new MouseEvent("pointerup", {
+          bubbles: true,
+          clientX: 10,
+          clientY: 50
+        })
+      );
+    });
+
+    expect(ref.current?.getBaseState()).toBe("idle");
+
+    unmount();
+  });
 });

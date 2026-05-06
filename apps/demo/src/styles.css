@@ -31,22 +31,12 @@ select {
   min-width: 0;
   place-items: center;
   background:
-    linear-gradient(90deg, rgba(46, 99, 86, 0.08) 1px, transparent 1px),
-    linear-gradient(rgba(46, 99, 86, 0.08) 1px, transparent 1px),
+    radial-gradient(circle, rgba(91, 104, 99, 0.28) 1px, transparent 1.5px),
     #f9fbfa;
-  background-size: 28px 28px;
+  background-size: 18px 18px;
 }
 
-.pet-button {
-  display: grid;
-  place-items: center;
-  padding: 16px;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
-.pet-button:focus-visible {
+.pet-preview:focus-visible {
   outline: 3px solid #2f6f63;
   outline-offset: 6px;
 }

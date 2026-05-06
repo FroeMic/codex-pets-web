@@ -29,6 +29,74 @@ describe("Codex pet animator", () => {
     animator.destroy();
   });
 
+  it("positions and drags a floating pet element", () => {
+    const events: string[] = [];
+    const { element, animator, dragController } = createCodexPetElement({
+      spritesheetUrl: "/pets/vertical/spritesheet.webp",
+      state: "idle",
+      paused: true,
+      floating: { x: 20, y: 30, zIndex: 12 },
+      draggable: {
+        onDragStart: ({ x, y }) => events.push(`start:${x}:${y}`),
+        onDrag: ({ x, y }) => events.push(`drag:${x}:${y}`),
+        onDragEnd: ({ x, y }) => events.push(`end:${x}:${y}`)
+      }
+    });
+
+    expect(dragController?.getPosition()).toEqual({ x: 20, y: 30 });
+    expect(element.style.position).toBe("fixed");
+    expect(element.style.zIndex).toBe("12");
+    expect(element.style.transform).toBe("translate3d(20px, 30px, 0)");
+
+    element.dispatchEvent(
+      new MouseEvent("pointerdown", {
+        bubbles: true,
+        button: 0,
+        clientX: 25,
+        clientY: 35
+      })
+    );
+    window.dispatchEvent(
+      new MouseEvent("pointermove", {
+        bubbles: true,
+        clientX: 45,
+        clientY: 65
+      })
+    );
+
+    expect(animator.getBaseState()).toBe("running-right");
+
+    window.dispatchEvent(
+      new MouseEvent("pointermove", {
+        bubbles: true,
+        clientX: 15,
+        clientY: 65
+      })
+    );
+
+    expect(animator.getBaseState()).toBe("running-left");
+
+    window.dispatchEvent(
+      new MouseEvent("pointerup", {
+        bubbles: true,
+        clientX: 15,
+        clientY: 65
+      })
+    );
+
+    expect(animator.getBaseState()).toBe("idle");
+    expect(dragController?.getPosition()).toEqual({ x: 10, y: 60 });
+    expect(element.style.transform).toBe("translate3d(10px, 60px, 0)");
+    expect(events).toEqual([
+      "start:20:30",
+      "drag:40:60",
+      "drag:10:60",
+      "end:10:60"
+    ]);
+
+    animator.destroy();
+  });
+
   it("plays a temporary action and returns to the base state", () => {
     const element = document.createElement("div");
     const events: string[] = [];
