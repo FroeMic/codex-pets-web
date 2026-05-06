@@ -268,3 +268,7 @@ npm run pack:dry
 ```
 
 The latest release line is `0.3.x`.
+
+## License
+
+MIT
