@@ -6,6 +6,8 @@ Render Codex pet spritesheets in web products. The core package is plain
 TypeScript with no runtime dependencies; framework packages wrap the same
 engine for product teams using React, Vue, Svelte, Solid, or Angular.
 
+Live demo: https://froemic.github.io/codex-pets-web/
+
 ## Packages
 
 - `codex-pet-web`: dependency-free DOM renderer, animator, drag controller, and
