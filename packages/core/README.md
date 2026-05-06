@@ -15,7 +15,7 @@ npm install codex-pet-web
 import { createCodexPetElement } from "codex-pet-web";
 
 const { element, animator } = createCodexPetElement({
-  spritesheetUrl: "/pets/vertical/spritesheet.webp",
+  spritesheetUrl: "/pets/sapling/spritesheet.webp",
   state: "idle",
   scale: 2
 });
@@ -57,7 +57,7 @@ import { CODEX_PET_EXAMPLES } from "codex-pet-web";
 
 ```ts
 const { element, dragController } = createCodexPetElement({
-  spritesheetUrl: "/pets/vertical/spritesheet.webp",
+  spritesheetUrl: "/pets/sapling/spritesheet.webp",
   floating: { x: 24, y: 24, zIndex: 100 },
   draggable: {
     onDragEnd: ({ x, y }) => {
@@ -80,7 +80,7 @@ plays one `jumping` loop before returning to that state.
 import { getPetFrameStyle } from "codex-pet-web";
 
 const style = getPetFrameStyle({
-  spritesheetUrl: "/pets/vertical/spritesheet.webp",
+  spritesheetUrl: "/pets/sapling/spritesheet.webp",
   state: "review",
   frame: 2,
   scale: 2
@@ -91,7 +91,7 @@ const style = getPetFrameStyle({
 
 ```ts
 const animator = createCodexPetAnimator(element, {
-  spritesheetUrl: "/pets/vertical/spritesheet.webp",
+  spritesheetUrl: "/pets/sapling/spritesheet.webp",
   state: "idle",
   fps: 8,
   onAnimationEnd: ({ state }) => console.log(state)
@@ -115,7 +115,7 @@ Use `stateFps` when idle should be calmer than action states:
 
 ```ts
 const animator = createCodexPetAnimator(element, {
-  spritesheetUrl: "/pets/vertical/spritesheet.webp",
+  spritesheetUrl: "/pets/sapling/spritesheet.webp",
   fps: 8,
   stateFps: {
     idle: 2,

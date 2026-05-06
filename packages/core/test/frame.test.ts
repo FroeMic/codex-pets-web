@@ -31,7 +31,7 @@ describe("Codex pet frame contract", () => {
   it("calculates scaled CSS background styles", () => {
     expect(
       getPetFrameStyle({
-        spritesheetUrl: "/pets/vertical/spritesheet.webp",
+        spritesheetUrl: "/pets/sapling/spritesheet.webp",
         state: "review",
         frame: 5,
         scale: 2
@@ -39,7 +39,7 @@ describe("Codex pet frame contract", () => {
     ).toMatchObject({
       width: "384px",
       height: "416px",
-      backgroundImage: 'url("/pets/vertical/spritesheet.webp")',
+      backgroundImage: 'url("/pets/sapling/spritesheet.webp")',
       backgroundSize: "3072px 3744px",
       backgroundPosition: "-1920px -3328px",
       backgroundRepeat: "no-repeat",

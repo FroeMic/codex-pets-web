@@ -9,6 +9,10 @@ describe("demo defaults", () => {
     join(import.meta.dirname, "../../../scripts/copy-fixture-pets.mjs"),
     "utf8"
   );
+  const localScript = readFileSync(
+    join(import.meta.dirname, "../../../scripts/copy-local-pets.mjs"),
+    "utf8"
+  );
 
   it("starts pets at a compact size", () => {
     expect(source).toContain("useState(0.5)");
@@ -35,5 +39,10 @@ describe("demo defaults", () => {
 
   it("builds production fixtures from bundled example pets", () => {
     expect(fixtureScript).toContain('"packages", "core", "example-pets"');
+  });
+
+  it("loads bundled examples along with local user pets in development", () => {
+    expect(localScript).toContain('"packages", "core", "example-pets"');
+    expect(localScript).toContain('".codex", "pets"');
   });
 });

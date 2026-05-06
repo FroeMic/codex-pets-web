@@ -18,7 +18,7 @@ import { CodexPet } from "codex-pet-web-react";
 export function PetPreview() {
   return (
     <CodexPet
-      spritesheetUrl="/pets/vertical/spritesheet.webp"
+      spritesheetUrl="/pets/sapling/spritesheet.webp"
       state="idle"
       scale={2}
     />
@@ -51,7 +51,7 @@ Then render one:
 <CodexPet
   draggable
   floating={{ x: 24, y: 24, zIndex: 100 }}
-  spritesheetUrl="/pets/vertical/spritesheet.webp"
+  spritesheetUrl="/pets/sapling/spritesheet.webp"
   onPetDragEnd={({ x, y }) => {
     console.log("pet position", x, y);
   }}
@@ -74,7 +74,7 @@ previous base state and plays one `jumping` loop before returning to that state.
 
 ```tsx
 <CodexPet
-  spritesheetUrl="/pets/vertical/spritesheet.webp"
+  spritesheetUrl="/pets/sapling/spritesheet.webp"
   state={isLoading ? "running" : "idle"}
 />
 ```
@@ -85,7 +85,7 @@ Use `stateFps` to keep idle calm without slowing action states:
 <CodexPet
   fps={8}
   stateFps={{ idle: 2, waiting: 3 }}
-  spritesheetUrl="/pets/vertical/spritesheet.webp"
+  spritesheetUrl="/pets/sapling/spritesheet.webp"
 />
 ```
 
@@ -103,7 +103,7 @@ export function ActionPet() {
   return (
     <CodexPet
       ref={pet}
-      spritesheetUrl="/pets/vertical/spritesheet.webp"
+      spritesheetUrl="/pets/sapling/spritesheet.webp"
       state="idle"
       onClick={() => pet.current?.play("waving", { loops: 1 })}
       onDoubleClick={() => pet.current?.setState("running", { interrupt: true })}
@@ -125,7 +125,7 @@ Pets are decorative by default. Add `aria-label` when a pet is meaningful:
 
 ```tsx
 <CodexPet
-  aria-label="Vertical pet"
-  spritesheetUrl="/pets/vertical/spritesheet.webp"
+  aria-label="Sapling pet"
+  spritesheetUrl="/pets/sapling/spritesheet.webp"
 />
 ```

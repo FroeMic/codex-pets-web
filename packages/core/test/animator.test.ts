@@ -15,7 +15,7 @@ describe("Codex pet animator", () => {
 
   it("renders a pet element with the expected accessible defaults", () => {
     const { element, animator } = createCodexPetElement({
-      spritesheetUrl: "/pets/vertical/spritesheet.webp",
+      spritesheetUrl: "/pets/sapling/spritesheet.webp",
       state: "idle",
       scale: 1.5,
       paused: true
@@ -32,7 +32,7 @@ describe("Codex pet animator", () => {
   it("positions and drags a floating pet element", () => {
     const events: string[] = [];
     const { element, animator, dragController } = createCodexPetElement({
-      spritesheetUrl: "/pets/vertical/spritesheet.webp",
+      spritesheetUrl: "/pets/sapling/spritesheet.webp",
       state: "idle",
       paused: true,
       floating: { x: 20, y: 30, zIndex: 12 },
@@ -99,7 +99,7 @@ describe("Codex pet animator", () => {
 
   it("keeps running while dragging and jumps on release", () => {
     const { element, animator } = createCodexPetElement({
-      spritesheetUrl: "/pets/vertical/spritesheet.webp",
+      spritesheetUrl: "/pets/sapling/spritesheet.webp",
       state: "idle",
       fps: 8,
       floating: { x: 20, y: 30 },
@@ -160,7 +160,7 @@ describe("Codex pet animator", () => {
 
   it("lets drag direction interrupt a temporary action", () => {
     const { element, animator } = createCodexPetElement({
-      spritesheetUrl: "/pets/vertical/spritesheet.webp",
+      spritesheetUrl: "/pets/sapling/spritesheet.webp",
       state: "idle",
       fps: 8,
       floating: true,
@@ -197,7 +197,7 @@ describe("Codex pet animator", () => {
     const element = document.createElement("div");
     const events: string[] = [];
     const animator = createCodexPetAnimator(element, {
-      spritesheetUrl: "/pets/vertical/spritesheet.webp",
+      spritesheetUrl: "/pets/sapling/spritesheet.webp",
       state: "running",
       fps: 10,
       onAnimationStart: ({ state }) => events.push(`start:${state}`),
@@ -224,7 +224,7 @@ describe("Codex pet animator", () => {
   it("supports per-state frame rates", () => {
     const element = document.createElement("div");
     const animator = createCodexPetAnimator(element, {
-      spritesheetUrl: "/pets/vertical/spritesheet.webp",
+      spritesheetUrl: "/pets/sapling/spritesheet.webp",
       state: "idle",
       fps: 8,
       stateFps: {
@@ -247,8 +247,8 @@ describe("Codex pet animator", () => {
   });
 
   it("caches image preloads by URL", () => {
-    const first = preloadPet("/pets/vertical/spritesheet.webp");
-    const second = preloadPet("/pets/vertical/spritesheet.webp");
+    const first = preloadPet("/pets/sapling/spritesheet.webp");
+    const second = preloadPet("/pets/sapling/spritesheet.webp");
 
     expect(first).toBe(second);
   });

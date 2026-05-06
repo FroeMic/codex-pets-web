@@ -10,9 +10,9 @@ import {
 import type { CodexPetController, CodexPetManifest } from "codex-pet-web";
 
 const manifest: CodexPetManifest = {
-  id: "vertical",
-  displayName: "Vertical",
-  description: "A desktop computer pet.",
+  id: "sapling",
+  displayName: "Sapling",
+  description: "A tree companion pet.",
   spritesheetPath: "spritesheet.webp"
 };
 
@@ -54,7 +54,7 @@ describe("CodexPet", () => {
     const { host, rerender, unmount } = render(
       <CodexPet
         manifest={manifest}
-        spritesheetUrl="/pets/vertical/spritesheet.webp"
+        spritesheetUrl="/pets/sapling/spritesheet.webp"
         state="idle"
         paused
       />
@@ -68,7 +68,7 @@ describe("CodexPet", () => {
     rerender(
       <CodexPet
         manifest={manifest}
-        spritesheetUrl="/pets/vertical/spritesheet.webp"
+        spritesheetUrl="/pets/sapling/spritesheet.webp"
         state="review"
         paused
       />
@@ -88,7 +88,7 @@ describe("CodexPet", () => {
       <CodexPet
         ref={ref}
         manifest={manifest}
-        spritesheetUrl="/pets/vertical/spritesheet.webp"
+        spritesheetUrl="/pets/sapling/spritesheet.webp"
         state="running"
         fps={10}
         onAnimationEnd={({ state }) => events.push(`end:${state}`)}
@@ -119,9 +119,9 @@ describe("CodexPet", () => {
   it("uses an accessible image role when aria-label is provided", () => {
     const { host, unmount } = render(
       <CodexPet
-        aria-label="Vertical pet"
+        aria-label="Sapling pet"
         manifest={manifest}
-        spritesheetUrl="/pets/vertical/spritesheet.webp"
+        spritesheetUrl="/pets/sapling/spritesheet.webp"
         state="idle"
         paused
       />
@@ -129,7 +129,7 @@ describe("CodexPet", () => {
 
     const pet = host.querySelector("[data-codex-pet]");
     expect(pet?.getAttribute("role")).toBe("img");
-    expect(pet?.getAttribute("aria-label")).toBe("Vertical pet");
+    expect(pet?.getAttribute("aria-label")).toBe("Sapling pet");
 
     unmount();
   });
@@ -140,12 +140,12 @@ describe("CodexPet", () => {
     const { host, unmount } = render(
       <CodexPet
         ref={ref}
-        aria-label="Vertical pet"
+        aria-label="Sapling pet"
         draggable
         floating={{ x: 18, y: 24, zIndex: 30 }}
         manifest={manifest}
         paused
-        spritesheetUrl="/pets/vertical/spritesheet.webp"
+        spritesheetUrl="/pets/sapling/spritesheet.webp"
         onPetDrag={({ x, y }) => events.push(`${x}:${y}`)}
       />
     );
@@ -221,7 +221,7 @@ describe("CodexPet", () => {
         floating
         fps={8}
         manifest={manifest}
-        spritesheetUrl="/pets/vertical/spritesheet.webp"
+        spritesheetUrl="/pets/sapling/spritesheet.webp"
       />
     );
     const pet = host.querySelector("[data-codex-pet]") as HTMLDivElement;
@@ -286,7 +286,7 @@ describe("CodexPet", () => {
     const { unmount } = render(
       <CodexPet
         ref={ref}
-        spritesheetUrl="/pets/vertical/spritesheet.webp"
+        spritesheetUrl="/pets/sapling/spritesheet.webp"
         state="idle"
         fps={8}
         stateFps={{ idle: 2, jumping: 8 }}
@@ -311,7 +311,7 @@ describe("CodexPet", () => {
       <CodexPetProvider
         pets={{
           assistant: {
-            spritesheetUrl: "/pets/vertical/spritesheet.webp",
+            spritesheetUrl: "/pets/sapling/spritesheet.webp",
             state: "review",
             scale: 0.5,
             floating: { x: 12, y: 16 }
@@ -345,7 +345,7 @@ describe("CodexPet", () => {
       <CodexPetProvider
         pets={{
           assistant: {
-            spritesheetUrl: "/pets/vertical/spritesheet.webp",
+            spritesheetUrl: "/pets/sapling/spritesheet.webp",
             floating: true
           }
         }}
@@ -389,7 +389,7 @@ describe("CodexPet", () => {
         <CodexPetProvider
           pets={{
             assistant: {
-              spritesheetUrl: "/pets/vertical/spritesheet.webp",
+              spritesheetUrl: "/pets/sapling/spritesheet.webp",
               floating: { x: 10, y: 20 }
             }
           }}
@@ -429,11 +429,11 @@ describe("CodexPet", () => {
       <CodexPetProvider
         pets={{
           assistant: {
-            spritesheetUrl: "/pets/vertical/spritesheet.webp",
+            spritesheetUrl: "/pets/sapling/spritesheet.webp",
             floating: { x: 10, y: 20 }
           },
           reviewer: {
-            spritesheetUrl: "/pets/vertical/spritesheet.webp",
+            spritesheetUrl: "/pets/sapling/spritesheet.webp",
             state: "review",
             floating: { x: 100, y: 120 }
           }
