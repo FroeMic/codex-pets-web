@@ -1,17 +1,18 @@
 import {
-  createCodexPetAnimator,
-  createCodexPetDragController,
+  createCodexPetRegistry,
   type CodexPetAnimationEvent,
-  type CodexPetAnimator,
-  type CodexPetDragController,
+  type CodexPetConfig,
+  type CodexPetController,
   type CodexPetDragEvent,
   type CodexPetDragOptions,
   type CodexPetErrorEvent,
   type CodexPetFloatingOptions,
+  type CodexPetId,
   type CodexPetManifest,
   type CodexPetPlayOptions,
   type CodexPetPosition,
   type CodexPetSetStateOptions,
+  type CodexPetSnapshot,
   type CodexPetState,
   type CodexPetStateChangeEvent,
   type CodexPetStateFps,
@@ -19,12 +20,14 @@ import {
 } from "codex-pet-web";
 import {
   forwardRef,
+  useContext,
   useEffect,
   useImperativeHandle,
   useRef,
   type CSSProperties,
   type HTMLAttributes
 } from "react";
+import { CodexPetRegistryContext } from "./CodexPetProvider.js";
 import { useLatest } from "./useLatest.js";
 
 type NativeDivProps = Omit<
@@ -44,16 +47,21 @@ export interface CodexPetHandle {
   setState(state: CodexPetState, options?: CodexPetSetStateOptions): void;
   pause(): void;
   resume(): void;
+  hide(): void;
+  show(): void;
+  remove(): void;
   setPosition(position: CodexPetPosition): void;
   getPosition(): CodexPetPosition | null;
   getState(): CodexPetState;
   getBaseState(): CodexPetState;
   getFrame(): number;
+  getSnapshot(): CodexPetSnapshot;
 }
 
 export interface CodexPetProps extends NativeDivProps {
+  id?: CodexPetId;
   manifest?: CodexPetManifest;
-  spritesheetUrl: string;
+  spritesheetUrl?: string;
   state?: CodexPetState;
   scale?: number;
   fps?: number;
@@ -76,21 +84,30 @@ export interface CodexPetProps extends NativeDivProps {
   onPetDragEnd?: (event: CodexPetDragEvent) => void;
 }
 
+function getDefinedConfig(
+  config: Partial<CodexPetConfig>
+): Partial<CodexPetConfig> {
+  return Object.fromEntries(
+    Object.entries(config).filter(([, value]) => value !== undefined)
+  ) as Partial<CodexPetConfig>;
+}
+
 export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
   function CodexPet(
     {
+      id,
       manifest,
       spritesheetUrl,
-      state = "idle",
-      scale = 1,
-      fps = 8,
+      state,
+      scale,
+      fps,
       stateFps,
-      paused = false,
-      reducedMotion = "user-preference",
+      paused,
+      reducedMotion,
       imageRendering = "pixelated",
       floating,
       draggable,
-      preload = true,
+      preload,
       onReady,
       onError,
       onStateChange,
@@ -110,12 +127,12 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
     },
     ref
   ) {
+    const contextRegistry = useContext(CodexPetRegistryContext);
+    const localRegistryRef = useRef<ReturnType<typeof createCodexPetRegistry> | null>(
+      null
+    );
     const elementRef = useRef<HTMLDivElement>(null);
-    const animatorRef = useRef<CodexPetAnimator | null>(null);
-    const dragControllerRef = useRef<CodexPetDragController | null>(null);
-    const stateBeforeDragRef = useRef<CodexPetState | null>(null);
-    const initialFloatingRef = useRef(floating);
-    const initialDraggableRef = useRef(draggable);
+    const petId = id ?? manifest?.id ?? "default";
     const callbacksRef = useLatest({
       onReady,
       onError,
@@ -129,172 +146,134 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
       onPetDragEnd
     });
 
+    const config = getDefinedConfig({
+      spritesheetUrl,
+      state,
+      scale,
+      fps,
+      stateFps,
+      paused,
+      reducedMotion,
+      imageRendering: String(imageRendering),
+      floating,
+      draggable:
+        draggable && typeof draggable === "object"
+          ? {
+              ...draggable,
+              onDragStart: (event) => {
+                draggable.onDragStart?.(event);
+                callbacksRef.current.onPetDragStart?.(event);
+              },
+              onDrag: (event) => {
+                draggable.onDrag?.(event);
+                callbacksRef.current.onPetDrag?.(event);
+              },
+              onDragEnd: (event) => {
+                draggable.onDragEnd?.(event);
+                callbacksRef.current.onPetDragEnd?.(event);
+              }
+            }
+          : draggable
+            ? {
+                onDragStart: (event) =>
+                  callbacksRef.current.onPetDragStart?.(event),
+                onDrag: (event) => callbacksRef.current.onPetDrag?.(event),
+                onDragEnd: (event) =>
+                  callbacksRef.current.onPetDragEnd?.(event)
+              }
+            : undefined,
+      preload,
+      onReady: () => callbacksRef.current.onReady?.(),
+      onError: (event) => callbacksRef.current.onError?.(event),
+      onStateChange: (event) => callbacksRef.current.onStateChange?.(event),
+      onAnimationStart: (event) =>
+        callbacksRef.current.onAnimationStart?.(event),
+      onAnimationLoop: (event) =>
+        callbacksRef.current.onAnimationLoop?.(event),
+      onAnimationEnd: (event) => callbacksRef.current.onAnimationEnd?.(event),
+      onFrameChange: (event) => callbacksRef.current.onFrameChange?.(event)
+    });
+
+    if (!contextRegistry && !localRegistryRef.current) {
+      if (!spritesheetUrl) {
+        throw new Error(
+          "CodexPet requires spritesheetUrl when used without CodexPetProvider."
+        );
+      }
+
+      localRegistryRef.current = createCodexPetRegistry({
+        defaultPetId: petId,
+        pets: {
+          [petId]: { ...config, spritesheetUrl }
+        }
+      });
+    }
+
+    const registry = contextRegistry ?? localRegistryRef.current;
+
+    if (!registry) {
+      throw new Error("CodexPet could not create a pet registry.");
+    }
+
+    const controller: CodexPetController = registry.has(petId)
+      ? registry.get(petId)
+      : spritesheetUrl
+        ? registry.register(petId, { ...config, spritesheetUrl })
+        : registry.get(petId);
+
+    useEffect(() => {
+      controller.setConfig(config);
+    }, [
+      controller,
+      spritesheetUrl,
+      state,
+      scale,
+      fps,
+      stateFps,
+      paused,
+      reducedMotion,
+      imageRendering,
+      floating,
+      draggable,
+      preload
+    ]);
+
     useEffect(() => {
       const element = elementRef.current;
+
       if (!element) {
         return;
       }
 
-      const animator = createCodexPetAnimator(element, {
-        spritesheetUrl,
-        state,
-        scale,
-        fps,
-        stateFps,
-        paused,
-        reducedMotion,
-        imageRendering: String(imageRendering),
-        preload,
-        onReady: () => callbacksRef.current.onReady?.(),
-        onError: (event: CodexPetErrorEvent) =>
-          callbacksRef.current.onError?.(event),
-        onStateChange: (event: CodexPetStateChangeEvent) =>
-          callbacksRef.current.onStateChange?.(event),
-        onAnimationStart: (event: CodexPetAnimationEvent) =>
-          callbacksRef.current.onAnimationStart?.(event),
-        onAnimationLoop: (event: CodexPetAnimationEvent) =>
-          callbacksRef.current.onAnimationLoop?.(event),
-        onAnimationEnd: (event: CodexPetAnimationEvent) =>
-          callbacksRef.current.onAnimationEnd?.(event),
-        onFrameChange: (event: CodexPetAnimationEvent) =>
-          callbacksRef.current.onFrameChange?.(event)
-      });
-
-      animatorRef.current = animator;
+      controller.bind(element);
 
       return () => {
-        animator.destroy();
-        if (animatorRef.current === animator) {
-          animatorRef.current = null;
-        }
+        controller.unbind(element);
       };
-    }, []);
-
-    useEffect(() => {
-      const element = elementRef.current;
-      const initialFloating = initialFloatingRef.current;
-      const initialDraggable = initialDraggableRef.current;
-
-      if (!element || (!initialFloating && !initialDraggable)) {
-        return;
-      }
-
-      const dragOptions =
-        typeof initialDraggable === "object" ? initialDraggable : {};
-      const dragController = createCodexPetDragController(element, {
-        floating: initialFloating,
-        draggable: initialDraggable
-          ? {
-              ...dragOptions,
-              onDragStart: (event: CodexPetDragEvent) => {
-                stateBeforeDragRef.current =
-                  animatorRef.current?.getBaseState() ?? null;
-                dragOptions.onDragStart?.(event);
-                callbacksRef.current.onPetDragStart?.(event);
-              },
-              onDrag: (event: CodexPetDragEvent) => {
-                if (event.deltaX > 0) {
-                  animatorRef.current?.setBaseState("running-right", {
-                    interrupt: true
-                  });
-                } else if (event.deltaX < 0) {
-                  animatorRef.current?.setBaseState("running-left", {
-                    interrupt: true
-                  });
-                }
-
-                dragOptions.onDrag?.(event);
-                callbacksRef.current.onPetDrag?.(event);
-              },
-              onDragEnd: (event: CodexPetDragEvent) => {
-                const returnTo = stateBeforeDragRef.current;
-
-                if (returnTo) {
-                  animatorRef.current?.setBaseState(returnTo, {
-                    interrupt: true
-                  });
-                  stateBeforeDragRef.current = null;
-                  animatorRef.current?.play("jumping", { loops: 1, returnTo });
-                }
-
-                dragOptions.onDragEnd?.(event);
-                callbacksRef.current.onPetDragEnd?.(event);
-              }
-            }
-          : false
-      });
-
-      dragControllerRef.current = dragController;
-
-      return () => {
-        dragController.destroy();
-        if (dragControllerRef.current === dragController) {
-          dragControllerRef.current = null;
-        }
-      };
-    }, []);
-
-    useEffect(() => {
-      animatorRef.current?.setBaseState(state);
-    }, [state]);
-
-    useEffect(() => {
-      animatorRef.current?.setSpritesheetUrl(spritesheetUrl);
-    }, [spritesheetUrl]);
-
-    useEffect(() => {
-      animatorRef.current?.setScale(scale);
-    }, [scale]);
-
-    useEffect(() => {
-      animatorRef.current?.setFps(fps);
-    }, [fps]);
-
-    useEffect(() => {
-      animatorRef.current?.setStateFps(stateFps ?? {});
-    }, [stateFps]);
-
-    useEffect(() => {
-      animatorRef.current?.setPaused(paused);
-    }, [paused]);
-
-    useEffect(() => {
-      animatorRef.current?.setReducedMotion(reducedMotion);
-    }, [reducedMotion]);
-
-    useEffect(() => {
-      animatorRef.current?.setImageRendering(String(imageRendering));
-    }, [imageRendering]);
+    }, [controller]);
 
     useImperativeHandle(
       ref,
       () => ({
-        play: (nextState, options) => {
-          animatorRef.current?.play(nextState, options);
-        },
-        setState: (nextState, options) => {
-          animatorRef.current?.setBaseState(nextState, options);
-        },
-        pause: () => {
-          animatorRef.current?.pause();
-        },
-        resume: () => {
-          animatorRef.current?.resume();
-        },
-        setPosition: (position) => {
-          dragControllerRef.current?.setPosition(position);
-        },
-        getPosition: () => dragControllerRef.current?.getPosition() ?? null,
-        getState: () => animatorRef.current?.getState() ?? state,
-        getBaseState: () => animatorRef.current?.getBaseState() ?? state,
-        getFrame: () => animatorRef.current?.getFrame() ?? 0
+        play: (nextState, options) => controller.play(nextState, options),
+        setState: (nextState, options) => controller.setState(nextState, options),
+        pause: () => controller.setConfig({ paused: true }),
+        resume: () => controller.setConfig({ paused: false }),
+        hide: () => controller.hide(),
+        show: () => controller.show(),
+        remove: () => controller.remove(),
+        setPosition: (position) => controller.setPosition(position),
+        getPosition: () => controller.getSnapshot().position,
+        getState: () => controller.getSnapshot().state,
+        getBaseState: () => controller.getSnapshot().baseState,
+        getFrame: () => controller.getSnapshot().frame,
+        getSnapshot: () => controller.getSnapshot()
       }),
-      [state]
+      [controller]
     );
 
     const accessibleRole = ariaLabel ? role ?? "img" : role;
-    const accessibleHidden =
-      ariaHidden ?? (ariaLabel ? undefined : true);
+    const accessibleHidden = ariaHidden ?? (ariaLabel ? undefined : true);
 
     return (
       <div
@@ -302,7 +281,7 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
         aria-hidden={accessibleHidden}
         aria-label={ariaLabel}
         className={className}
-        data-codex-pet={manifest?.id ?? ""}
+        data-codex-pet={petId}
         ref={elementRef}
         role={accessibleRole}
         style={style}

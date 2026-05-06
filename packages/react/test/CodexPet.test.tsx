@@ -1,8 +1,13 @@
 import { act } from "react";
 import type { ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { CodexPet, type CodexPetHandle } from "../src/index";
-import type { CodexPetManifest } from "codex-pet-web";
+import {
+  CodexPet,
+  CodexPetProvider,
+  useCodexPet,
+  type CodexPetHandle
+} from "../src/index";
+import type { CodexPetController, CodexPetManifest } from "codex-pet-web";
 
 const manifest: CodexPetManifest = {
   id: "vertical",
@@ -297,6 +302,163 @@ describe("CodexPet", () => {
       vi.advanceTimersByTime(200);
     });
     expect(ref.current?.getFrame()).toBe(1);
+
+    unmount();
+  });
+
+  it("binds provider-registered pets by id", () => {
+    const { host, unmount } = render(
+      <CodexPetProvider
+        pets={{
+          assistant: {
+            spritesheetUrl: "/pets/vertical/spritesheet.webp",
+            state: "review",
+            scale: 0.5,
+            floating: { x: 12, y: 16 }
+          }
+        }}
+      >
+        <CodexPet id="assistant" />
+      </CodexPetProvider>
+    );
+
+    const pet = host.querySelector("[data-codex-pet='assistant']") as HTMLDivElement;
+
+    expect(pet).toBeInstanceOf(HTMLDivElement);
+    expect(pet.style.width).toBe("96px");
+    expect(pet.style.height).toBe("104px");
+    expect(pet.style.backgroundPosition).toBe("0px -832px");
+    expect(pet.style.transform).toBe("translate3d(12px, 16px, 0)");
+
+    unmount();
+  });
+
+  it("controls provider pets from useCodexPet", () => {
+    let assistant: CodexPetController | null = null;
+
+    function CapturePet() {
+      assistant = useCodexPet("assistant");
+      return null;
+    }
+
+    const { host, unmount } = render(
+      <CodexPetProvider
+        pets={{
+          assistant: {
+            spritesheetUrl: "/pets/vertical/spritesheet.webp",
+            floating: true
+          }
+        }}
+      >
+        <CapturePet />
+        <CodexPet id="assistant" />
+      </CodexPetProvider>
+    );
+    const pet = host.querySelector("[data-codex-pet='assistant']") as HTMLDivElement;
+
+    act(() => {
+      assistant?.play("waving", { loops: 1 });
+    });
+    expect(assistant?.getSnapshot().state).toBe("waving");
+    expect(pet.style.backgroundPosition).toBe("0px -624px");
+
+    act(() => {
+      assistant?.hide();
+    });
+    expect(assistant?.getSnapshot().hidden).toBe(true);
+    expect(pet.style.display).toBe("none");
+
+    act(() => {
+      assistant?.show();
+    });
+    expect(pet.style.display).toBe("inline-block");
+
+    unmount();
+  });
+
+  it("preserves provider pet position across visual remounts", () => {
+    let assistant: CodexPetController | null = null;
+
+    function CapturePet() {
+      assistant = useCodexPet("assistant");
+      return null;
+    }
+
+    function App({ mounted }: { mounted: boolean }) {
+      return (
+        <CodexPetProvider
+          pets={{
+            assistant: {
+              spritesheetUrl: "/pets/vertical/spritesheet.webp",
+              floating: { x: 10, y: 20 }
+            }
+          }}
+        >
+          <CapturePet />
+          {mounted ? <CodexPet id="assistant" /> : null}
+        </CodexPetProvider>
+      );
+    }
+
+    const { host, rerender, unmount } = render(<App mounted />);
+
+    act(() => {
+      assistant?.setPosition({ x: 70, y: 90 });
+    });
+
+    rerender(<App mounted={false} />);
+    rerender(<App mounted />);
+
+    const pet = host.querySelector("[data-codex-pet='assistant']") as HTMLDivElement;
+    expect(pet.style.transform).toBe("translate3d(70px, 90px, 0)");
+
+    unmount();
+  });
+
+  it("controls multiple provider pets independently", () => {
+    let assistant: CodexPetController | null = null;
+    let reviewer: CodexPetController | null = null;
+
+    function CapturePets() {
+      assistant = useCodexPet("assistant");
+      reviewer = useCodexPet("reviewer");
+      return null;
+    }
+
+    const { host, unmount } = render(
+      <CodexPetProvider
+        pets={{
+          assistant: {
+            spritesheetUrl: "/pets/vertical/spritesheet.webp",
+            floating: { x: 10, y: 20 }
+          },
+          reviewer: {
+            spritesheetUrl: "/pets/vertical/spritesheet.webp",
+            state: "review",
+            floating: { x: 100, y: 120 }
+          }
+        }}
+      >
+        <CapturePets />
+        <CodexPet id="assistant" />
+        <CodexPet id="reviewer" />
+      </CodexPetProvider>
+    );
+
+    act(() => {
+      assistant?.setState("running");
+      reviewer?.setState("failed");
+    });
+
+    const assistantElement = host.querySelector(
+      "[data-codex-pet='assistant']"
+    ) as HTMLDivElement;
+    const reviewerElement = host.querySelector(
+      "[data-codex-pet='reviewer']"
+    ) as HTMLDivElement;
+
+    expect(assistantElement.style.backgroundPosition).toBe("0px -1456px");
+    expect(reviewerElement.style.backgroundPosition).toBe("0px -1040px");
 
     unmount();
   });
