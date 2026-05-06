@@ -27,6 +27,12 @@ Framework-neutral DOM usage:
 npm install codex-pet-web
 ```
 
+## Next.js
+
+Use `codex-pet-web-react` from a client component. The React package ships
+`"use client"` markers, while `codex-pet-web` stays framework-neutral for shared
+types, constants, and browser runtime utilities.
+
 ## Quick Start: React
 
 ```tsx

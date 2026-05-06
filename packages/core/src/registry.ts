@@ -153,9 +153,10 @@ class CodexPetControllerImpl implements CodexPetController {
 
   setConfig(config: Partial<CodexPetConfig>): void {
     this.assertNotRemoved();
+    const previousState = this.config.state ?? DEFAULT_STATE;
     this.config = { ...this.config, ...config };
 
-    if (config.state) {
+    if (config.state && config.state !== previousState) {
       this.baseState = config.state;
       this.state = config.state;
       this.animator?.setBaseState(config.state, { interrupt: true });

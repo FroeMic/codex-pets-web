@@ -10,6 +10,35 @@ npm install codex-pet-web-react codex-pet-web
 
 `react` is a peer dependency.
 
+## Next.js
+
+`codex-pet-web-react` is client-only and ships `"use client"` markers. In a
+Next.js App Router app, import it from a client component and render that client
+component from your layout or page:
+
+```tsx
+"use client";
+
+import { CodexPet, CodexPetProvider } from "codex-pet-web-react";
+
+export function PetLayer() {
+  return (
+    <CodexPetProvider
+      pets={{
+        assistant: {
+          spritesheetUrl: "/codex-pets/sapling/spritesheet.webp",
+          scale: 0.45,
+          floating: { x: 24, y: 24 },
+          draggable: true
+        }
+      }}
+    >
+      <CodexPet id="assistant" />
+    </CodexPetProvider>
+  );
+}
+```
+
 ## Basic Usage
 
 ```tsx

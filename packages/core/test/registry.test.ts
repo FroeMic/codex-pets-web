@@ -144,4 +144,46 @@ describe("Codex pet registry", () => {
       position: { x: 100, y: 120 }
     });
   });
+
+  it("does not reset temporary drag state when unchanged config is applied", () => {
+    const registry = createCodexPetRegistry({
+      pets: {
+        assistant: {
+          spritesheetUrl: "/pets/sapling/spritesheet.webp",
+          state: "idle",
+          floating: true,
+          draggable: true
+        }
+      }
+    });
+    const assistant = registry.get("assistant");
+    const element = bind(assistant);
+
+    element.dispatchEvent(
+      new MouseEvent("pointerdown", {
+        bubbles: true,
+        button: 0,
+        clientX: 20,
+        clientY: 30
+      })
+    );
+    window.dispatchEvent(
+      new MouseEvent("pointermove", {
+        bubbles: true,
+        clientX: 40,
+        clientY: 30
+      })
+    );
+
+    expect(assistant.getSnapshot().state).toBe("running-right");
+
+    assistant.setConfig({
+      spritesheetUrl: "/pets/sapling/spritesheet.webp",
+      state: "idle",
+      floating: true,
+      draggable: true
+    });
+
+    expect(assistant.getSnapshot().state).toBe("running-right");
+  });
 });
