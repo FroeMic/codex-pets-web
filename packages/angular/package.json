@@ -10,14 +10,9 @@
     "directory": "packages/angular"
   },
   "type": "module",
+  "main": "./dist/fesm2022/codex-pet-web-angular.mjs",
   "module": "./dist/fesm2022/codex-pet-web-angular.mjs",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/fesm2022/codex-pet-web-angular.mjs"
-    }
-  },
   "files": ["dist", "README.md", "LICENSE"],
   "sideEffects": false,
   "publishConfig": { "access": "public" },

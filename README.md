@@ -4,13 +4,19 @@
 
 Render Codex pet spritesheets in web products. The core package is plain
 TypeScript with no runtime dependencies; framework packages wrap the same
-engine for product teams that use React today and other frameworks later.
+engine for product teams using React, Vue, Svelte, Solid, or Angular.
 
 ## Packages
 
 - `codex-pet-web`: dependency-free DOM renderer, animator, drag controller, and
   bundled example pet assets.
 - `codex-pet-web-react`: React wrapper around `codex-pet-web`.
+- `codex-pet-web-vue`: Vue wrapper around `codex-pet-web`.
+- `codex-pet-web-svelte`: Svelte action and context helpers for
+  `codex-pet-web`.
+- `codex-pet-web-solid`: Solid wrapper around `codex-pet-web`.
+- `codex-pet-web-angular`: Angular standalone component and registry service
+  around `codex-pet-web`.
 - `apps/demo`: local playground used by this repository.
 
 ## Install
@@ -19,6 +25,15 @@ React product:
 
 ```bash
 npm install codex-pet-web codex-pet-web-react
+```
+
+Other framework packages:
+
+```bash
+npm install codex-pet-web codex-pet-web-vue
+npm install codex-pet-web codex-pet-web-svelte
+npm install codex-pet-web codex-pet-web-solid
+npm install codex-pet-web codex-pet-web-angular
 ```
 
 Framework-neutral DOM usage:
@@ -223,7 +238,7 @@ States are mapped by row:
 
 - The packages are ESM-only and ship TypeScript declarations.
 - The core renderer has no runtime dependencies.
-- React is a peer dependency of `codex-pet-web-react`.
+- Framework packages keep their framework as a peer dependency.
 - Animation uses one shared scheduler across all pets.
 - Pets are decorative by default; pass `aria-label` when the pet communicates
   meaningful product state.

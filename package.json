@@ -23,7 +23,7 @@
     "test": "npm run test --workspaces --if-present",
     "dev": "npm run dev -w apps/demo",
     "copy:pets": "node scripts/copy-local-pets.mjs",
-    "pack:dry": "npm pack --dry-run -w packages/core && npm pack --dry-run -w packages/react",
+    "pack:dry": "npm pack --dry-run -w packages/core && npm pack --dry-run -w packages/react && npm pack --dry-run -w packages/vue && npm pack --dry-run -w packages/svelte && npm pack --dry-run -w packages/solid && npm pack --dry-run -w packages/angular",
     "prepublishOnly": "npm run build && npm run test && npm run pack:dry"
   },
   "keywords": [
