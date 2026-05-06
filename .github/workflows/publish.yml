@@ -63,11 +63,31 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish core
-        run: npm publish -w packages/core --access public --provenance --tag "${{ inputs.npm_tag }}"
+        run: |
+          set -euo pipefail
+
+          package_name="$(node -p "require('./packages/core/package.json').name")"
+          package_version="$(node -p "require('./packages/core/package.json').version")"
+
+          if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
+            npm dist-tag add "${package_name}@${package_version}" "${{ inputs.npm_tag }}"
+          else
+            npm publish -w packages/core --access public --provenance --tag "${{ inputs.npm_tag }}"
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish React
-        run: npm publish -w packages/react --access public --provenance --tag "${{ inputs.npm_tag }}"
+        run: |
+          set -euo pipefail
+
+          package_name="$(node -p "require('./packages/react/package.json').name")"
+          package_version="$(node -p "require('./packages/react/package.json').version")"
+
+          if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
+            npm dist-tag add "${package_name}@${package_version}" "${{ inputs.npm_tag }}"
+          else
+            npm publish -w packages/react --access public --provenance --tag "${{ inputs.npm_tag }}"
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
