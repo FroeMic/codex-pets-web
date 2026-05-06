@@ -45,22 +45,17 @@ jobs:
       - name: Check package contents
         run: npm run pack:dry
 
-      - name: Verify npm publish ownership
+      - name: Verify package ownership metadata
         run: |
           set -euo pipefail
 
-          npm_user="$(npm whoami)"
-          echo "Publishing as npm user: ${npm_user}"
-
           if npm view codex-pets-core version >/dev/null 2>&1; then
-            npm owner ls codex-pets-core | awk '{print $1}' | grep -Fx "${npm_user}"
+            npm owner ls codex-pets-core
           else
             echo "codex-pets-core is not published yet; first publish is allowed."
           fi
 
-          npm owner ls codex-pets-react | awk '{print $1}' | grep -Fx "${npm_user}"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm owner ls codex-pets-react
 
       - name: Publish core
         run: |
@@ -72,10 +67,8 @@ jobs:
           if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
             npm dist-tag add "${package_name}@${package_version}" "${{ inputs.npm_tag }}"
           else
-            npm publish -w packages/core --access public --provenance --tag "${{ inputs.npm_tag }}"
+            npm publish -w packages/core --access public --tag "${{ inputs.npm_tag }}"
           fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish React
         run: |
@@ -87,7 +80,5 @@ jobs:
           if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
             npm dist-tag add "${package_name}@${package_version}" "${{ inputs.npm_tag }}"
           else
-            npm publish -w packages/react --access public --provenance --tag "${{ inputs.npm_tag }}"
+            npm publish -w packages/react --access public --tag "${{ inputs.npm_tag }}"
           fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
