@@ -1,0 +1,6 @@
+{
+  "id": "carrot",
+  "displayName": "Carrot",
+  "description": "A cute carrot companion with leafy green hair and tiny limbs.",
+  "spritesheetPath": "spritesheet.webp"
+}

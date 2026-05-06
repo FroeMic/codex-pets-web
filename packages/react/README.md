@@ -1,6 +1,6 @@
 # codex-pet-web-react
 
-React wrapper for Codex pet spritesheets.
+React wrapper for rendering Codex pet spritesheets in web products.
 
 ## Install
 
@@ -24,6 +24,25 @@ export function PetPreview() {
     />
   );
 }
+```
+
+## Add Pet Assets
+
+`spritesheetUrl` must point at a public asset. To use the examples bundled with
+`codex-pet-web`, copy them into your app:
+
+```bash
+mkdir -p public/codex-pets
+cp -R node_modules/codex-pet-web/example-pets/* public/codex-pets/
+```
+
+Then render one:
+
+```tsx
+<CodexPet
+  spritesheetUrl="/codex-pets/carrot/spritesheet.webp"
+  state="idle"
+/>
 ```
 
 ## Floating And Dragging

@@ -16,10 +16,16 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./example-pets": {
+      "types": "./dist/example-pets.d.ts",
+      "import": "./dist/example-pets.js"
+    },
+    "./example-pets/*": "./example-pets/*"
   },
   "files": [
     "dist",
+    "example-pets",
     "README.md",
     "LICENSE"
   ],

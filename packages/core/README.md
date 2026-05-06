@@ -1,6 +1,7 @@
 # codex-pet-web
 
-Dependency-free TypeScript engine for Codex pet spritesheets.
+Dependency-free TypeScript engine for rendering Codex pet spritesheets in web
+products.
 
 ## Install
 
@@ -21,6 +22,35 @@ const { element, animator } = createCodexPetElement({
 
 document.body.append(element);
 animator.play("waving", { loops: 1 });
+```
+
+## Bundled Example Pets
+
+The package includes three example pet assets:
+
+- `sapling`: tree companion
+- `carrot`: carrot companion
+- `bandit`: raccoon companion
+
+Copy them into your app's public assets:
+
+```bash
+mkdir -p public/codex-pets
+cp -R node_modules/codex-pet-web/example-pets/* public/codex-pets/
+```
+
+Then render one with a public URL:
+
+```ts
+createCodexPetElement({
+  spritesheetUrl: "/codex-pets/sapling/spritesheet.webp"
+});
+```
+
+Typed metadata is available from the package:
+
+```ts
+import { CODEX_PET_EXAMPLES } from "codex-pet-web";
 ```
 
 ## Floating And Dragging

@@ -2,6 +2,8 @@
 
 ## 0.2.0
 
+- Added bundled example pet assets for Sapling, Carrot, and Bandit.
+- Added typed example pet metadata via `CODEX_PET_EXAMPLES`.
 - Added floating pet positioning and pointer dragging to `codex-pet-web`.
 - Added React `floating`, `draggable`, and pet drag callback props.
 - Added drag-direction animation that switches to running-left or running-right.

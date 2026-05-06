@@ -16,6 +16,14 @@ export interface CodexPetManifest {
   spritesheetPath: string;
 }
 
+export interface CodexPetExample {
+  id: string;
+  displayName: string;
+  description: string;
+  manifestPath: string;
+  spritesheetPath: string;
+}
+
 export interface CodexPetAtlas {
   columns: number;
   rows: number;

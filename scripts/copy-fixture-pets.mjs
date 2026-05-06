@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-const sourceRoot = join(repoRoot, "fixtures", "pets");
+const sourceRoot = join(repoRoot, "packages", "core", "example-pets");
 const targetRoot = join(repoRoot, "apps", "demo", "public", "pets");
 
 async function readManifest(petId) {

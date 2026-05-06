@@ -10,6 +10,11 @@ export { preloadPet } from "./preload.js";
 export { createCodexPetAnimator } from "./animator.js";
 export { createCodexPetDragController } from "./drag.js";
 export { createCodexPetElement } from "./dom.js";
+export {
+  CODEX_PET_EXAMPLES,
+  getCodexPetExample,
+  type CodexPetExampleId
+} from "./example-pets.js";
 export type {
   CodexPetAnimationEvent,
   CodexPetAnimator,
@@ -20,6 +25,7 @@ export type {
   CodexPetDragOptions,
   CodexPetElement,
   CodexPetErrorEvent,
+  CodexPetExample,
   CodexPetFloatingOptions,
   CodexPetFrame,
   CodexPetFrameStyle,

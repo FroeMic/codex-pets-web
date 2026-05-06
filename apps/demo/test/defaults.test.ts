@@ -5,6 +5,10 @@ import { describe, expect, it } from "vitest";
 describe("demo defaults", () => {
   const source = readFileSync(join(import.meta.dirname, "../src/main.tsx"), "utf8");
   const styles = readFileSync(join(import.meta.dirname, "../src/styles.css"), "utf8");
+  const fixtureScript = readFileSync(
+    join(import.meta.dirname, "../../../scripts/copy-fixture-pets.mjs"),
+    "utf8"
+  );
 
   it("starts pets at a compact size", () => {
     expect(source).toContain("useState(0.5)");
@@ -27,5 +31,9 @@ describe("demo defaults", () => {
 
   it("uses a dotted canvas background", () => {
     expect(styles).toContain("radial-gradient");
+  });
+
+  it("builds production fixtures from bundled example pets", () => {
+    expect(fixtureScript).toContain('"packages", "core", "example-pets"');
   });
 });
