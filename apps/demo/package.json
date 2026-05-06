@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "node ../../scripts/copy-fixture-pets.mjs && tsc -p tsconfig.json && vite build",
+    "test": "vitest run test/defaults.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

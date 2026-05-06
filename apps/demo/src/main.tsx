@@ -24,8 +24,8 @@ function App() {
   const [pets, setPets] = useState<DemoPet[]>([]);
   const [selectedPetId, setSelectedPetId] = useState("");
   const [state, setState] = useState<CodexPetState>("idle");
-  const [scale, setScale] = useState(2);
-  const [fps, setFps] = useState(8);
+  const [scale, setScale] = useState(1);
+  const [fps, setFps] = useState(4);
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [eventLog, setEventLog] = useState<string[]>([]);
