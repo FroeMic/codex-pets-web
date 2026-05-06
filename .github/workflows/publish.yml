@@ -45,6 +45,23 @@ jobs:
       - name: Check package contents
         run: npm run pack:dry
 
+      - name: Verify npm publish ownership
+        run: |
+          set -euo pipefail
+
+          npm_user="$(npm whoami)"
+          echo "Publishing as npm user: ${npm_user}"
+
+          if npm view codex-pets-core version >/dev/null 2>&1; then
+            npm owner ls codex-pets-core | awk '{print $1}' | grep -Fx "${npm_user}"
+          else
+            echo "codex-pets-core is not published yet; first publish is allowed."
+          fi
+
+          npm owner ls codex-pets-react | awk '{print $1}' | grep -Fx "${npm_user}"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish core
         run: npm publish -w packages/core --access public --provenance --tag "${{ inputs.npm_tag }}"
         env:
