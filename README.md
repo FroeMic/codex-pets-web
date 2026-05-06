@@ -1,5 +1,7 @@
 # Codex Pets Web
 
+![Codex Pets banner](docs/assets/codex-pets-banner.png)
+
 Render Codex pet spritesheets in web products. The core package is plain
 TypeScript with no runtime dependencies; framework packages wrap the same
 engine for product teams that use React today and other frameworks later.
