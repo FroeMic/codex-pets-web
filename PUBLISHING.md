@@ -20,6 +20,22 @@ npm view codex-pets-react version
 `codex-pets-react` already has a historical `0.2.0`, so this monorepo starts
 the React package at `0.3.0`. `codex-pets-core` starts at `0.1.0`.
 
+The npm token must belong to an account that can publish both package names.
+At the time this repository was prepared, `codex-pets-core` was unclaimed and
+`codex-pets-react` was owned by the `backnotprop` npm account. Either create
+the automation token from that account or add the publishing account as an
+owner before running the release workflow:
+
+```bash
+npm owner add <npm-username> codex-pets-react
+```
+
+Add the token to GitHub after creating it:
+
+```bash
+gh secret set NPM_TOKEN --repo FroeMic/codex-pets-web
+```
+
 ## Local Verification
 
 Run these before publishing:
