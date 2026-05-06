@@ -1,0 +1,48 @@
+{
+  "name": "codex-pets-web",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Framework-neutral and React renderers for Codex pet spritesheets.",
+  "license": "MIT",
+  "author": "FroeMic",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FroeMic/codex-pets-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FroeMic/codex-pets-web/issues"
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "dev": "npm run dev -w apps/demo",
+    "copy:pets": "node scripts/copy-local-pets.mjs",
+    "pack:dry": "npm pack --dry-run -w packages/core && npm pack --dry-run -w packages/react",
+    "prepublishOnly": "npm run build && npm run test && npm run pack:dry"
+  },
+  "keywords": [
+    "codex",
+    "pets",
+    "spritesheet",
+    "react",
+    "animation"
+  ],
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "happy-dom": "^20.0.10",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^4.0.16"
+  }
+}
