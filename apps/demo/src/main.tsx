@@ -11,6 +11,14 @@ type DemoPet = CodexPetManifest & {
 
 const stateNames = Object.keys(CODEX_PET_STATES) as CodexPetState[];
 
+function withBaseUrl(path: string): string {
+  if (!path.startsWith("/")) {
+    return path;
+  }
+
+  return `${import.meta.env.BASE_URL}${path.slice(1)}`;
+}
+
 function App() {
   const petRef = useRef<CodexPetHandle>(null);
   const [pets, setPets] = useState<DemoPet[]>([]);
@@ -24,7 +32,7 @@ function App() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/pets/pets-index.json")
+    fetch(`${import.meta.env.BASE_URL}pets/pets-index.json`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Run `npm run copy:pets` before starting the demo.");
@@ -32,7 +40,13 @@ function App() {
         return response.json() as Promise<{ pets: DemoPet[] }>;
       })
       .then((data) => {
-        setPets(data.pets);
+        setPets(
+          data.pets.map((pet) => ({
+            ...pet,
+            manifestUrl: withBaseUrl(pet.manifestUrl),
+            spritesheetUrl: withBaseUrl(pet.spritesheetUrl)
+          }))
+        );
         setSelectedPetId(data.pets[0]?.id ?? "");
         setError(null);
       })
