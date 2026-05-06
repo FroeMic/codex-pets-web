@@ -151,6 +151,11 @@ describe("CodexPet", () => {
     expect(ref.current?.getPosition()).toEqual({ x: 18, y: 24 });
 
     act(() => {
+      ref.current?.play("jumping", { loops: 1 });
+    });
+    expect(ref.current?.getState()).toBe("jumping");
+
+    act(() => {
       pet.dispatchEvent(
         new MouseEvent("pointerdown", {
           bubbles: true,
@@ -170,6 +175,7 @@ describe("CodexPet", () => {
 
     expect(ref.current?.getPosition()).toEqual({ x: 38, y: 44 });
     expect(ref.current?.getBaseState()).toBe("running-right");
+    expect(ref.current?.getState()).toBe("running-right");
     expect(pet.style.transform).toBe("translate3d(38px, 44px, 0)");
     expect(events).toContain("38:44");
 
@@ -196,6 +202,76 @@ describe("CodexPet", () => {
     });
 
     expect(ref.current?.getBaseState()).toBe("idle");
+    expect(ref.current?.getState()).toBe("jumping");
+
+    unmount();
+  });
+
+  it("keeps the running animation advancing while dragging", () => {
+    const ref = { current: null as CodexPetHandle | null };
+    const { host, unmount } = render(
+      <CodexPet
+        ref={ref}
+        draggable
+        floating
+        fps={8}
+        manifest={manifest}
+        spritesheetUrl="/pets/vertical/spritesheet.webp"
+      />
+    );
+    const pet = host.querySelector("[data-codex-pet]") as HTMLDivElement;
+
+    act(() => {
+      pet.dispatchEvent(
+        new MouseEvent("pointerdown", {
+          bubbles: true,
+          button: 0,
+          clientX: 20,
+          clientY: 30
+        })
+      );
+      window.dispatchEvent(
+        new MouseEvent("pointermove", {
+          bubbles: true,
+          clientX: 40,
+          clientY: 30
+        })
+      );
+      vi.advanceTimersByTime(150);
+    });
+
+    expect(ref.current?.getState()).toBe("running-right");
+    expect(ref.current?.getFrame()).toBe(1);
+
+    act(() => {
+      window.dispatchEvent(
+        new MouseEvent("pointermove", {
+          bubbles: true,
+          clientX: 50,
+          clientY: 30
+        })
+      );
+    });
+
+    expect(ref.current?.getState()).toBe("running-right");
+    expect(ref.current?.getFrame()).toBe(1);
+
+    act(() => {
+      window.dispatchEvent(
+        new MouseEvent("pointerup", {
+          bubbles: true,
+          clientX: 50,
+          clientY: 30
+        })
+      );
+    });
+
+    expect(ref.current?.getState()).toBe("jumping");
+
+    act(() => {
+      vi.advanceTimersByTime(800);
+    });
+    expect(ref.current?.getState()).toBe("idle");
 
     unmount();
   });

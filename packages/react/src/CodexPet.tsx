@@ -11,6 +11,7 @@ import {
   type CodexPetManifest,
   type CodexPetPlayOptions,
   type CodexPetPosition,
+  type CodexPetSetStateOptions,
   type CodexPetState,
   type CodexPetStateChangeEvent,
   type CodexPetStateFps,
@@ -40,7 +41,7 @@ type NativeDivProps = Omit<
 
 export interface CodexPetHandle {
   play(state: CodexPetState, options?: CodexPetPlayOptions): void;
-  setState(state: CodexPetState): void;
+  setState(state: CodexPetState, options?: CodexPetSetStateOptions): void;
   pause(): void;
   resume(): void;
   setPosition(position: CodexPetPosition): void;
@@ -193,18 +194,27 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
               },
               onDrag: (event: CodexPetDragEvent) => {
                 if (event.deltaX > 0) {
-                  animatorRef.current?.setBaseState("running-right");
+                  animatorRef.current?.setBaseState("running-right", {
+                    interrupt: true
+                  });
                 } else if (event.deltaX < 0) {
-                  animatorRef.current?.setBaseState("running-left");
+                  animatorRef.current?.setBaseState("running-left", {
+                    interrupt: true
+                  });
                 }
 
                 dragOptions.onDrag?.(event);
                 callbacksRef.current.onPetDrag?.(event);
               },
               onDragEnd: (event: CodexPetDragEvent) => {
-                if (stateBeforeDragRef.current) {
-                  animatorRef.current?.setBaseState(stateBeforeDragRef.current);
+                const returnTo = stateBeforeDragRef.current;
+
+                if (returnTo) {
+                  animatorRef.current?.setBaseState(returnTo, {
+                    interrupt: true
+                  });
                   stateBeforeDragRef.current = null;
+                  animatorRef.current?.play("jumping", { loops: 1, returnTo });
                 }
 
                 dragOptions.onDragEnd?.(event);
@@ -262,8 +272,8 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
         play: (nextState, options) => {
           animatorRef.current?.play(nextState, options);
         },
-        setState: (nextState) => {
-          animatorRef.current?.setBaseState(nextState);
+        setState: (nextState, options) => {
+          animatorRef.current?.setBaseState(nextState, options);
         },
         pause: () => {
           animatorRef.current?.pause();

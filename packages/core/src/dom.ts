@@ -38,17 +38,20 @@ export function createCodexPetElement(
           const [event] = args;
 
           if (event.deltaX > 0) {
-            animator.setBaseState("running-right");
+            animator.setBaseState("running-right", { interrupt: true });
           } else if (event.deltaX < 0) {
-            animator.setBaseState("running-left");
+            animator.setBaseState("running-left", { interrupt: true });
           }
 
           userDragOptions.onDrag?.(...args);
         },
         onDragEnd: (...args: Parameters<NonNullable<CodexPetDragOptions["onDragEnd"]>>) => {
-          if (stateBeforeDrag) {
-            animator.setBaseState(stateBeforeDrag);
+          const returnTo = stateBeforeDrag;
+
+          if (returnTo) {
+            animator.setBaseState(returnTo, { interrupt: true });
             stateBeforeDrag = null;
+            animator.play("jumping", { loops: 1, returnTo });
           }
 
           userDragOptions.onDragEnd?.(...args);

@@ -26,6 +26,7 @@ export type {
   CodexPetManifest,
   CodexPetPlayOptions,
   CodexPetPosition,
+  CodexPetSetStateOptions,
   CodexPetState,
   CodexPetStateChangeEvent,
   CodexPetStateConfig,

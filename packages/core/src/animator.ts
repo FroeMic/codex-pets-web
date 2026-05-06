@@ -7,6 +7,7 @@ import type {
   CodexPetAnimator,
   CodexPetAnimatorOptions,
   CodexPetPlayOptions,
+  CodexPetSetStateOptions,
   CodexPetState,
   CodexPetStateFps
 } from "./types.js";
@@ -88,9 +89,22 @@ export class CodexPetAnimatorImpl
     this.updateSchedule();
   }
 
-  setBaseState(state: CodexPetState): void {
+  setBaseState(
+    state: CodexPetState,
+    options: CodexPetSetStateOptions = {}
+  ): void {
     const previousState = this.getState();
+    const shouldInterrupt = options.interrupt && this.activeAction !== null;
+
+    if (state === this.baseState && !shouldInterrupt) {
+      return;
+    }
+
     this.baseState = state;
+
+    if (shouldInterrupt) {
+      this.activeAction = null;
+    }
 
     if (!this.activeAction) {
       this.frame = 0;

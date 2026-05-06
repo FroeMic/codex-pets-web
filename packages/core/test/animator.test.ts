@@ -97,6 +97,102 @@ describe("Codex pet animator", () => {
     animator.destroy();
   });
 
+  it("keeps running while dragging and jumps on release", () => {
+    const { element, animator } = createCodexPetElement({
+      spritesheetUrl: "/pets/vertical/spritesheet.webp",
+      state: "idle",
+      fps: 8,
+      floating: { x: 20, y: 30 },
+      draggable: true
+    });
+
+    try {
+      element.dispatchEvent(
+        new MouseEvent("pointerdown", {
+          bubbles: true,
+          button: 0,
+          clientX: 25,
+          clientY: 35
+        })
+      );
+      window.dispatchEvent(
+        new MouseEvent("pointermove", {
+          bubbles: true,
+          clientX: 45,
+          clientY: 35
+        })
+      );
+
+      expect(animator.getState()).toBe("running-right");
+
+      animator.tick(0);
+      animator.tick(126);
+      expect(animator.getFrame()).toBe(1);
+
+      window.dispatchEvent(
+        new MouseEvent("pointermove", {
+          bubbles: true,
+          clientX: 55,
+          clientY: 35
+        })
+      );
+
+      expect(animator.getState()).toBe("running-right");
+      expect(animator.getFrame()).toBe(1);
+
+      window.dispatchEvent(
+        new MouseEvent("pointerup", {
+          bubbles: true,
+          clientX: 55,
+          clientY: 35
+        })
+      );
+
+      expect(animator.getState()).toBe("jumping");
+
+      animator.tick(252);
+      animator.tick(877);
+      expect(animator.getState()).toBe("idle");
+    } finally {
+      animator.destroy();
+    }
+  });
+
+  it("lets drag direction interrupt a temporary action", () => {
+    const { element, animator } = createCodexPetElement({
+      spritesheetUrl: "/pets/vertical/spritesheet.webp",
+      state: "idle",
+      fps: 8,
+      floating: true,
+      draggable: true
+    });
+
+    try {
+      animator.play("jumping", { loops: 1 });
+      expect(animator.getState()).toBe("jumping");
+
+      element.dispatchEvent(
+        new MouseEvent("pointerdown", {
+          bubbles: true,
+          button: 0,
+          clientX: 25,
+          clientY: 35
+        })
+      );
+      window.dispatchEvent(
+        new MouseEvent("pointermove", {
+          bubbles: true,
+          clientX: 5,
+          clientY: 35
+        })
+      );
+
+      expect(animator.getState()).toBe("running-left");
+    } finally {
+      animator.destroy();
+    }
+  });
+
   it("plays a temporary action and returns to the base state", () => {
     const element = document.createElement("div");
     const events: string[] = [];

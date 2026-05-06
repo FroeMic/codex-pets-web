@@ -48,8 +48,8 @@ ref.current?.setPosition({ x: 48, y: 48 });
 ```
 
 During drag, horizontal movement automatically switches the pet to
-`running-left` or `running-right`, then restores the previous base state when
-the pointer is released.
+`running-left` or `running-right`. When the pointer is released, it restores the
+previous base state and plays one `jumping` loop before returning to that state.
 
 ## Controlled State
 
@@ -87,6 +87,7 @@ export function ActionPet() {
       spritesheetUrl="/pets/vertical/spritesheet.webp"
       state="idle"
       onClick={() => pet.current?.play("waving", { loops: 1 })}
+      onDoubleClick={() => pet.current?.setState("running", { interrupt: true })}
       onAnimationEnd={({ state }) => console.log(`${state} finished`)}
     />
   );
@@ -95,6 +96,9 @@ export function ActionPet() {
 
 The component does not re-render every animation frame. It mounts one DOM node
 and lets `codex-pet-web` update background position directly.
+
+Pass `{ interrupt: true }` to `setState` when the new persistent state should
+cancel a temporary action started with `play`.
 
 ## Accessibility
 

@@ -41,7 +41,8 @@ dragController?.setPosition({ x: 48, y: 48 });
 ```
 
 Dragging temporarily switches the pet to `running-left` or `running-right`
-based on horizontal movement, then restores its previous base state on release.
+based on horizontal movement. On release it restores the previous base state and
+plays one `jumping` loop before returning to that state.
 
 ## Pure Frame Math
 
@@ -67,6 +68,7 @@ const animator = createCodexPetAnimator(element, {
 });
 
 animator.setBaseState("running");
+animator.setBaseState("running-left", { interrupt: true });
 animator.play("jumping", { loops: 1 });
 animator.pause();
 animator.resume();
@@ -75,6 +77,9 @@ animator.destroy();
 
 The core animator uses a shared scheduler, so multiple pets share one animation
 clock instead of creating one timer per pet.
+
+Use `interrupt: true` when a persistent state change should cancel a temporary
+action that was started with `play`.
 
 Use `stateFps` when idle should be calmer than action states:
 
