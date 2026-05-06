@@ -1,13 +1,16 @@
 # Changelog
 
+## 0.3.1
+
+- Marked React entry points as client modules for Next.js App Router usage.
+- Fixed drag state flicker when unchanged controlled state props are reapplied.
+
 ## 0.3.0
 
 - Added framework-neutral pet registries and controllers in `codex-pet-web`.
 - Added React `CodexPetProvider`, `useCodexPet`, and `useCodexPetRandomActions`.
 - Added `hide`, `show`, and `remove` controller commands.
 - Added idle-only weighted random action runners with configurable average intervals.
-- Marked React entry points as client modules for Next.js App Router usage.
-- Fixed drag state flicker when unchanged controlled state props are reapplied.
 - Updated the demo to start slightly smaller and merge bundled examples with local pets.
 - Removed the old Vertical fixture from the repository.
 
