@@ -70,6 +70,65 @@ During drag, horizontal movement automatically switches the pet to
 `running-left` or `running-right`. When the pointer is released, it restores the
 previous base state and plays one `jumping` loop before returning to that state.
 
+## Provider And Hooks
+
+Use `CodexPetProvider` when pet state should survive route or component changes,
+or when one app controls multiple pets:
+
+```tsx
+import {
+  CodexPet,
+  CodexPetProvider,
+  useCodexPet,
+  useCodexPetRandomActions
+} from "codex-pet-web-react";
+
+function AssistantControls() {
+  const pet = useCodexPet("assistant");
+
+  useCodexPetRandomActions("assistant", {
+    averageIntervalSeconds: 120,
+    minIntervalSeconds: 45,
+    maxIntervalSeconds: 300,
+    actions: [
+      { state: "waving", weight: 3 },
+      { state: "jumping", weight: 2 },
+      { state: "waiting", weight: 1 },
+      { state: "review", weight: 1 }
+    ]
+  });
+
+  return (
+    <>
+      <button onClick={() => pet.play("waving")}>Wave</button>
+      <button onClick={() => pet.hide()}>Hide</button>
+      <button onClick={() => pet.show()}>Show</button>
+    </>
+  );
+}
+
+export function AppPet() {
+  return (
+    <CodexPetProvider
+      pets={{
+        assistant: {
+          spritesheetUrl: "/codex-pets/sapling/spritesheet.webp",
+          scale: 0.45,
+          floating: { x: 24, y: 24 },
+          draggable: true
+        }
+      }}
+    >
+      <AssistantControls />
+      <CodexPet id="assistant" aria-label="Assistant pet" />
+    </CodexPetProvider>
+  );
+}
+```
+
+The provider is a thin React adapter over the core registry. The core controller
+owns behavior; React only binds a DOM node to it.
+
 ## Controlled State
 
 ```tsx

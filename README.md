@@ -30,19 +30,47 @@ npm install codex-pet-web
 ## Quick Start: React
 
 ```tsx
-import { CodexPet } from "codex-pet-web-react";
+import {
+  CodexPet,
+  CodexPetProvider,
+  useCodexPet,
+  useCodexPetRandomActions
+} from "codex-pet-web-react";
+
+function PetControls() {
+  const pet = useCodexPet("assistant");
+  useCodexPetRandomActions("assistant", {
+    averageIntervalSeconds: 120,
+    minIntervalSeconds: 45,
+    maxIntervalSeconds: 300,
+    actions: [
+      { state: "waving", weight: 3 },
+      { state: "jumping", weight: 2 },
+      { state: "waiting", weight: 1 },
+      { state: "review", weight: 1 }
+    ]
+  });
+
+  return <button onClick={() => pet.play("waving")}>Wave</button>;
+}
 
 export function AssistantPet() {
   return (
-    <CodexPet
-      aria-label="Assistant pet"
-      draggable
-      floating={{ x: 24, y: 24, zIndex: 1000 }}
-      fps={8}
-      scale={0.5}
-      spritesheetUrl="/codex-pets/sapling/spritesheet.webp"
-      stateFps={{ idle: 2, waiting: 3 }}
-    />
+    <CodexPetProvider
+      pets={{
+        assistant: {
+          draggable: true,
+          floating: { x: 24, y: 24, zIndex: 1000 },
+          fps: 8,
+          scale: 0.45,
+          spritesheetUrl: "/codex-pets/sapling/spritesheet.webp",
+          stateFps: { idle: 2, waiting: 3 }
+        }
+      }}
+    >
+      <PetControls />
+      <CodexPet id="assistant" aria-label="Assistant pet" />
+    </CodexPetProvider>
   );
 }
 ```
@@ -112,6 +140,14 @@ During drag, horizontal movement switches to `running-left` or `running-right`;
 on release, the pet plays one `jumping` loop and returns to its previous base
 state.
 
+For app-wide control, register pets in `CodexPetProvider` and call
+`useCodexPet(id)` from anywhere inside the provider. Controllers expose
+`play`, `setState`, `setPosition`, `hide`, `show`, and `remove`.
+
+For ambient behavior, `useCodexPetRandomActions` attempts a weighted random
+action on a randomized schedule. It only plays an action when the pet is idle,
+visible, mounted, and not paused.
+
 ## Sprite Contract
 
 Codex pets are regular folders:
@@ -163,8 +199,10 @@ npm run copy:pets
 npm run dev
 ```
 
-`copy:pets` copies local pets from `~/.codex/pets` into the demo. Production
-demo builds copy the bundled example pets from `packages/core/example-pets`.
+`copy:pets` copies bundled examples plus local pets from `~/.codex/pets` into
+the demo. If a local pet uses the same id as a bundled example, the local pet
+wins. Production demo builds copy the bundled example pets from
+`packages/core/example-pets`.
 
 Before publishing:
 
@@ -175,4 +213,4 @@ npm run build
 npm run pack:dry
 ```
 
-The latest release line is `0.2.x`.
+The latest release line is `0.3.x`.

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+
+- Added framework-neutral pet registries and controllers in `codex-pet-web`.
+- Added React `CodexPetProvider`, `useCodexPet`, and `useCodexPetRandomActions`.
+- Added `hide`, `show`, and `remove` controller commands.
+- Added idle-only weighted random action runners with configurable average intervals.
+- Updated the demo to start slightly smaller and merge bundled examples with local pets.
+- Removed the old Vertical fixture from the repository.
+
 ## 0.2.0
 
 - Added bundled example pet assets for Sapling, Carrot, and Bandit.

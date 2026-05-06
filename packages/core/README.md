@@ -74,6 +74,58 @@ Dragging temporarily switches the pet to `running-left` or `running-right`
 based on horizontal movement. On release it restores the previous base state and
 plays one `jumping` loop before returning to that state.
 
+## Registry And Controllers
+
+Use a registry when a product needs app-wide control or multiple pets:
+
+```ts
+import { createCodexPetRegistry } from "codex-pet-web";
+
+const registry = createCodexPetRegistry({
+  pets: {
+    assistant: {
+      spritesheetUrl: "/codex-pets/sapling/spritesheet.webp",
+      scale: 0.45,
+      floating: { x: 24, y: 24 },
+      draggable: true
+    }
+  }
+});
+
+const pet = registry.get("assistant");
+pet.bind(document.querySelector("#pet")!);
+pet.play("waving", { loops: 1 });
+pet.hide();
+pet.show();
+```
+
+`hide` keeps the pet registered and preserves state. `show` makes it visible
+again. `remove` unregisters the pet and destroys its visual binding.
+
+## Random Idle Actions
+
+```ts
+import { createCodexPetRandomActionRunner } from "codex-pet-web";
+
+const runner = createCodexPetRandomActionRunner(pet, {
+  averageIntervalSeconds: 120,
+  minIntervalSeconds: 45,
+  maxIntervalSeconds: 300,
+  actions: [
+    { state: "waving", weight: 3 },
+    { state: "jumping", weight: 2 },
+    { state: "waiting", weight: 1 },
+    { state: "review", weight: 1 }
+  ]
+});
+
+runner.start();
+```
+
+The runner uses randomized one-shot timers. It only plays an action when the
+target pet is idle, visible, mounted, and not paused. Weights only affect which
+action is chosen; they do not affect how often attempts happen.
+
 ## Pure Frame Math
 
 ```ts
