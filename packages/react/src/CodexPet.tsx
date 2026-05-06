@@ -13,6 +13,7 @@ import {
   type CodexPetPosition,
   type CodexPetState,
   type CodexPetStateChangeEvent,
+  type CodexPetStateFps,
   type ReducedMotionPreference
 } from "codex-pet-web";
 import {
@@ -46,6 +47,7 @@ export interface CodexPetHandle {
   getPosition(): CodexPetPosition | null;
   getState(): CodexPetState;
   getBaseState(): CodexPetState;
+  getFrame(): number;
 }
 
 export interface CodexPetProps extends NativeDivProps {
@@ -54,6 +56,7 @@ export interface CodexPetProps extends NativeDivProps {
   state?: CodexPetState;
   scale?: number;
   fps?: number;
+  stateFps?: CodexPetStateFps;
   paused?: boolean;
   reducedMotion?: ReducedMotionPreference;
   imageRendering?: CSSProperties["imageRendering"];
@@ -80,6 +83,7 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
       state = "idle",
       scale = 1,
       fps = 8,
+      stateFps,
       paused = false,
       reducedMotion = "user-preference",
       imageRendering = "pixelated",
@@ -135,6 +139,7 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
         state,
         scale,
         fps,
+        stateFps,
         paused,
         reducedMotion,
         imageRendering: String(imageRendering),
@@ -236,6 +241,10 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
     }, [fps]);
 
     useEffect(() => {
+      animatorRef.current?.setStateFps(stateFps ?? {});
+    }, [stateFps]);
+
+    useEffect(() => {
       animatorRef.current?.setPaused(paused);
     }, [paused]);
 
@@ -267,7 +276,8 @@ export const CodexPet = forwardRef<CodexPetHandle, CodexPetProps>(
         },
         getPosition: () => dragControllerRef.current?.getPosition() ?? null,
         getState: () => animatorRef.current?.getState() ?? state,
-        getBaseState: () => animatorRef.current?.getBaseState() ?? state
+        getBaseState: () => animatorRef.current?.getBaseState() ?? state,
+        getFrame: () => animatorRef.current?.getFrame() ?? 0
       }),
       [state]
     );

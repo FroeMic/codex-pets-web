@@ -76,6 +76,19 @@ animator.destroy();
 The core animator uses a shared scheduler, so multiple pets share one animation
 clock instead of creating one timer per pet.
 
+Use `stateFps` when idle should be calmer than action states:
+
+```ts
+const animator = createCodexPetAnimator(element, {
+  spritesheetUrl: "/pets/vertical/spritesheet.webp",
+  fps: 8,
+  stateFps: {
+    idle: 2,
+    waiting: 3
+  }
+});
+```
+
 ## Accessibility
 
 `createCodexPetElement` marks pets as decorative by default with

@@ -10,6 +10,10 @@ type DemoPet = CodexPetManifest & {
 };
 
 const stateNames = Object.keys(CODEX_PET_STATES) as CodexPetState[];
+const petStateFps = {
+  idle: 2,
+  waiting: 3
+} satisfies Partial<Record<CodexPetState, number>>;
 
 function withBaseUrl(path: string): string {
   if (!path.startsWith("/")) {
@@ -25,7 +29,7 @@ function App() {
   const [selectedPetId, setSelectedPetId] = useState("");
   const [state, setState] = useState<CodexPetState>("idle");
   const [scale, setScale] = useState(0.5);
-  const [fps, setFps] = useState(4);
+  const [fps, setFps] = useState(8);
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [eventLog, setEventLog] = useState<string[]>([]);
@@ -81,6 +85,7 @@ function App() {
             scale={scale}
             spritesheetUrl={selectedPet.spritesheetUrl}
             state={state}
+            stateFps={petStateFps}
             onAnimationEnd={({ state: endedState }) =>
               recordEvent(`ended ${endedState}`)
             }
@@ -91,6 +96,7 @@ function App() {
             onPetDragEnd={({ x, y }) =>
               recordEvent(`position ${Math.round(x)}, ${Math.round(y)}`)
             }
+            onPointerEnter={() => petRef.current?.play("jumping", { loops: 1 })}
             onReady={() => recordEvent(`loaded ${selectedPet.displayName}`)}
             onStateChange={({ state: nextState }) =>
               recordEvent(`state ${nextState}`)

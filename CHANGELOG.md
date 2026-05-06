@@ -5,7 +5,8 @@
 - Added floating pet positioning and pointer dragging to `codex-pet-web`.
 - Added React `floating`, `draggable`, and pet drag callback props.
 - Added drag-direction animation that switches to running-left or running-right.
-- Reduced the demo pet size, slowed default animation, and changed the stage to a dotted canvas.
+- Added per-state FPS overrides for calmer idle loops with faster actions.
+- Reduced the demo pet size, added hover-to-jump, and changed the stage to a dotted canvas.
 
 ## 0.1.0
 

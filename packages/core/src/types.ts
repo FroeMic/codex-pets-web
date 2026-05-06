@@ -72,6 +72,8 @@ export interface CodexPetPlayOptions {
   returnTo?: CodexPetState;
 }
 
+export type CodexPetStateFps = Partial<Record<CodexPetState, number>>;
+
 export interface CodexPetPosition {
   x: number;
   y: number;
@@ -100,6 +102,7 @@ export interface CodexPetAnimatorOptions {
   state?: CodexPetState;
   scale?: number;
   fps?: number;
+  stateFps?: CodexPetStateFps;
   paused?: boolean;
   reducedMotion?: ReducedMotionPreference;
   imageRendering?: string;
@@ -127,6 +130,7 @@ export interface CodexPetAnimator {
   setSpritesheetUrl(spritesheetUrl: string): void;
   setScale(scale: number): void;
   setFps(fps: number): void;
+  setStateFps(stateFps: CodexPetStateFps): void;
   setImageRendering(imageRendering: string): void;
   setReducedMotion(reducedMotion: ReducedMotionPreference): void;
   setPaused(paused: boolean): void;

@@ -29,6 +29,7 @@ export type {
   CodexPetState,
   CodexPetStateChangeEvent,
   CodexPetStateConfig,
+  CodexPetStateFps,
   CreateCodexPetElementOptions,
   GetPetFrameOptions,
   GetPetFrameStyleOptions,

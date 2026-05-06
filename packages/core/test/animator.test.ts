@@ -125,6 +125,31 @@ describe("Codex pet animator", () => {
     animator.destroy();
   });
 
+  it("supports per-state frame rates", () => {
+    const element = document.createElement("div");
+    const animator = createCodexPetAnimator(element, {
+      spritesheetUrl: "/pets/vertical/spritesheet.webp",
+      state: "idle",
+      fps: 8,
+      stateFps: {
+        idle: 2,
+        jumping: 8
+      }
+    });
+
+    vi.advanceTimersByTime(400);
+    expect(animator.getFrame()).toBe(0);
+
+    vi.advanceTimersByTime(200);
+    expect(animator.getFrame()).toBe(1);
+
+    animator.setBaseState("jumping");
+    vi.advanceTimersByTime(150);
+    expect(animator.getFrame()).toBe(1);
+
+    animator.destroy();
+  });
+
   it("caches image preloads by URL", () => {
     const first = preloadPet("/pets/vertical/spritesheet.webp");
     const second = preloadPet("/pets/vertical/spritesheet.webp");

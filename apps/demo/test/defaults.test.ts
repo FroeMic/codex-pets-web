@@ -10,8 +10,14 @@ describe("demo defaults", () => {
     expect(source).toContain("useState(0.5)");
   });
 
-  it("starts animation at a calmer frame rate", () => {
-    expect(source).toContain("useState(4)");
+  it("keeps idle calmer while action states stay responsive", () => {
+    expect(source).toContain("useState(8)");
+    expect(source).toContain("idle: 2");
+  });
+
+  it("jumps when the pet is hovered", () => {
+    expect(source).toContain("onPointerEnter");
+    expect(source).toContain('play("jumping"');
   });
 
   it("allows pets to be downsized below the default", () => {

@@ -7,7 +7,8 @@ import type {
   CodexPetAnimator,
   CodexPetAnimatorOptions,
   CodexPetPlayOptions,
-  CodexPetState
+  CodexPetState,
+  CodexPetStateFps
 } from "./types.js";
 
 interface ActiveAction {
@@ -115,6 +116,12 @@ export class CodexPetAnimatorImpl
 
   setFps(fps: number): void {
     this.options = { ...this.options, fps: normalizeFps(fps) };
+    this.lastFrameAt = null;
+  }
+
+  setStateFps(stateFps: CodexPetStateFps): void {
+    this.options = { ...this.options, stateFps };
+    this.lastFrameAt = null;
   }
 
   setImageRendering(imageRendering: string): void {
@@ -160,7 +167,7 @@ export class CodexPetAnimatorImpl
       return;
     }
 
-    const frameDuration = 1000 / normalizeFps(this.options.fps);
+    const frameDuration = 1000 / this.getCurrentFps();
     if (this.lastFrameAt === null) {
       this.lastFrameAt = now;
       return;
@@ -224,6 +231,12 @@ export class CodexPetAnimatorImpl
       (reducedMotion === "user-preference" && prefersReducedMotion());
 
     return !this.destroyed && !this.paused && !shouldReduce;
+  }
+
+  private getCurrentFps(): number {
+    return normalizeFps(
+      this.options.stateFps?.[this.getState()] ?? this.options.fps
+    );
   }
 
   private updateSchedule(): void {

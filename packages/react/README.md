@@ -60,6 +60,16 @@ the pointer is released.
 />
 ```
 
+Use `stateFps` to keep idle calm without slowing action states:
+
+```tsx
+<CodexPet
+  fps={8}
+  stateFps={{ idle: 2, waiting: 3 }}
+  spritesheetUrl="/pets/vertical/spritesheet.webp"
+/>
+```
+
 ## Temporary Actions
 
 Use a ref for short-lived actions. Props remain the persistent source of truth.

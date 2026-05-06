@@ -199,4 +199,29 @@ describe("CodexPet", () => {
 
     unmount();
   });
+
+  it("passes per-state frame rates to the animator", () => {
+    const ref = { current: null as CodexPetHandle | null };
+    const { unmount } = render(
+      <CodexPet
+        ref={ref}
+        spritesheetUrl="/pets/vertical/spritesheet.webp"
+        state="idle"
+        fps={8}
+        stateFps={{ idle: 2, jumping: 8 }}
+      />
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(400);
+    });
+    expect(ref.current?.getFrame()).toBe(0);
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+    expect(ref.current?.getFrame()).toBe(1);
+
+    unmount();
+  });
 });
