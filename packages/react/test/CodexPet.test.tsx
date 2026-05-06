@@ -5,6 +5,7 @@ import {
   CodexPet,
   CodexPetProvider,
   useCodexPet,
+  useCodexPetRandomActions,
   type CodexPetHandle
 } from "../src/index";
 import type { CodexPetController, CodexPetManifest } from "codex-pet-web";
@@ -459,6 +460,43 @@ describe("CodexPet", () => {
 
     expect(assistantElement.style.backgroundPosition).toBe("0px -1456px");
     expect(reviewerElement.style.backgroundPosition).toBe("0px -1040px");
+
+    unmount();
+  });
+
+  it("runs random provider actions through the React hook", () => {
+    function AmbientActions() {
+      useCodexPetRandomActions("assistant", {
+        averageIntervalSeconds: 120,
+        minIntervalSeconds: 45,
+        maxIntervalSeconds: 300,
+        actions: [{ state: "waving", weight: 1 }],
+        random: () => 0
+      });
+
+      return null;
+    }
+
+    const { host, unmount } = render(
+      <CodexPetProvider
+        pets={{
+          assistant: {
+            spritesheetUrl: "/pets/sapling/spritesheet.webp"
+          }
+        }}
+      >
+        <AmbientActions />
+        <CodexPet id="assistant" />
+      </CodexPetProvider>
+    );
+
+    const pet = host.querySelector("[data-codex-pet='assistant']") as HTMLDivElement;
+
+    act(() => {
+      vi.advanceTimersByTime(45_000);
+    });
+
+    expect(pet.style.backgroundPosition).toBe("0px -624px");
 
     unmount();
   });

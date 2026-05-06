@@ -5,3 +5,4 @@ export {
   useCodexPet
 } from "./CodexPetProvider.js";
 export type { CodexPetProviderProps } from "./CodexPetProvider.js";
+export { useCodexPetRandomActions } from "./useCodexPetRandomActions.js";

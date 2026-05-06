@@ -15,7 +15,7 @@ describe("demo defaults", () => {
   );
 
   it("starts pets at a compact size", () => {
-    expect(source).toContain("useState(0.5)");
+    expect(source).toContain("useState(0.45)");
   });
 
   it("keeps idle calmer while action states stay responsive", () => {
@@ -44,5 +44,11 @@ describe("demo defaults", () => {
   it("loads bundled examples along with local user pets in development", () => {
     expect(localScript).toContain('"packages", "core", "example-pets"');
     expect(localScript).toContain('".codex", "pets"');
+  });
+
+  it("runs occasional idle-only random actions", () => {
+    expect(source).toContain("createCodexPetRandomActionRunner");
+    expect(source).toContain("averageIntervalSeconds: 120");
+    expect(source).toContain('{ state: "waving", weight: 3 }');
   });
 });

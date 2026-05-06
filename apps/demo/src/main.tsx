@@ -1,6 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { CODEX_PET_STATES, type CodexPetManifest, type CodexPetState } from "codex-pet-web";
+import {
+  CODEX_PET_STATES,
+  createCodexPetRandomActionRunner,
+  type CodexPetManifest,
+  type CodexPetSnapshot,
+  type CodexPetState
+} from "codex-pet-web";
 import { CodexPet, type CodexPetHandle } from "codex-pet-web-react";
 import "./styles.css";
 
@@ -28,7 +34,7 @@ function App() {
   const [pets, setPets] = useState<DemoPet[]>([]);
   const [selectedPetId, setSelectedPetId] = useState("");
   const [state, setState] = useState<CodexPetState>("idle");
-  const [scale, setScale] = useState(0.5);
+  const [scale, setScale] = useState(0.45);
   const [fps, setFps] = useState(8);
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -57,6 +63,47 @@ function App() {
       .catch((caughtError: unknown) => {
         setError(caughtError instanceof Error ? caughtError.message : String(caughtError));
       });
+  }, []);
+
+  useEffect(() => {
+    const runner = createCodexPetRandomActionRunner(
+      {
+        getSnapshot: () =>
+          petRef.current?.getSnapshot() ??
+          ({
+            id: "preview",
+            spritesheetUrl: "",
+            state: "idle",
+            baseState: "idle",
+            frame: 0,
+            scale,
+            fps,
+            position: null,
+            hidden: false,
+            mounted: false,
+            paused,
+            removed: false
+          } satisfies CodexPetSnapshot),
+        play: (nextState, options) => petRef.current?.play(nextState, options)
+      },
+      {
+        averageIntervalSeconds: 120,
+        minIntervalSeconds: 45,
+        maxIntervalSeconds: 300,
+        actions: [
+          { state: "waving", weight: 3 },
+          { state: "jumping", weight: 2 },
+          { state: "waiting", weight: 1 },
+          { state: "review", weight: 1 }
+        ]
+      }
+    );
+
+    runner.start();
+
+    return () => {
+      runner.destroy();
+    };
   }, []);
 
   const selectedPet = useMemo(
