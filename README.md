@@ -4,8 +4,8 @@ Production-ready web renderers for Codex pet spritesheets.
 
 This repository is an npm workspace with:
 
-- [`codex-pets-core`](./packages/core): dependency-free TypeScript engine.
-- [`codex-pets-react`](./packages/react): React wrapper around the core engine.
+- [`codex-pet-web`](./packages/core): dependency-free TypeScript engine.
+- [`codex-pet-web-react`](./packages/react): React wrapper around the core engine.
 - [`apps/demo`](./apps/demo): Vite playground for local pets from `~/.codex/pets`.
 
 ## Sprite Contract
@@ -84,5 +84,4 @@ npm publish -w packages/core --access public
 npm publish -w packages/react --access public
 ```
 
-`codex-pets-react` already exists on npm at `0.2.0`, so this workspace uses
-`0.3.0` for the React package. `codex-pets-core` starts at `0.1.0`.
+Both public packages start at `0.1.0`.

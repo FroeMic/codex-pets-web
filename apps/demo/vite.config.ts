@@ -6,9 +6,9 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "codex-pets-core": new URL("../../packages/core/src/index.ts", import.meta.url)
+      "codex-pet-web": new URL("../../packages/core/src/index.ts", import.meta.url)
         .pathname,
-      "codex-pets-react": new URL("../../packages/react/src/index.ts", import.meta.url)
+      "codex-pet-web-react": new URL("../../packages/react/src/index.ts", import.meta.url)
         .pathname
     }
   }

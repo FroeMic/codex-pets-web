@@ -7,7 +7,7 @@
     "outDir": "dist",
     "tsBuildInfoFile": ".tsbuildinfo",
     "paths": {
-      "codex-pets-core": ["../core/src/index.ts"]
+      "codex-pet-web": ["../core/src/index.ts"]
     }
   },
   "include": ["src"],

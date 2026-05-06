@@ -49,13 +49,17 @@ jobs:
         run: |
           set -euo pipefail
 
-          if npm view codex-pets-core version >/dev/null 2>&1; then
-            npm owner ls codex-pets-core
+          if npm view codex-pet-web version >/dev/null 2>&1; then
+            npm owner ls codex-pet-web
           else
-            echo "codex-pets-core is not published yet; first publish is allowed."
+            echo "codex-pet-web is not published yet; first publish is allowed."
           fi
 
-          npm owner ls codex-pets-react
+          if npm view codex-pet-web-react version >/dev/null 2>&1; then
+            npm owner ls codex-pet-web-react
+          else
+            echo "codex-pet-web-react is not published yet; first publish is allowed."
+          fi
 
       - name: Publish core
         run: |

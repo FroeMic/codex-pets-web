@@ -3,7 +3,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   resolve: {
     alias: {
-      "codex-pets-core": new URL("../core/src/index.ts", import.meta.url)
+      "codex-pet-web": new URL("../core/src/index.ts", import.meta.url)
         .pathname
     }
   },

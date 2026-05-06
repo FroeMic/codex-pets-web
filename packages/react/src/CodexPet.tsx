@@ -8,7 +8,7 @@ import {
   type CodexPetState,
   type CodexPetStateChangeEvent,
   type ReducedMotionPreference
-} from "codex-pets-core";
+} from "codex-pet-web";
 import {
   forwardRef,
   useEffect,

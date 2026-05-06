@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { CODEX_PET_STATES, type CodexPetManifest, type CodexPetState } from "codex-pets-core";
-import { CodexPet, type CodexPetHandle } from "codex-pets-react";
+import { CODEX_PET_STATES, type CodexPetManifest, type CodexPetState } from "codex-pet-web";
+import { CodexPet, type CodexPetHandle } from "codex-pet-web-react";
 import "./styles.css";
 
 type DemoPet = CodexPetManifest & {
@@ -108,7 +108,7 @@ function App() {
       <aside className="controls" aria-label="Pet controls">
         <div>
           <h1>Codex Pets</h1>
-          <p>Preview local Codex pet packages through codex-pets-react.</p>
+          <p>Preview local Codex pet packages through codex-pet-web-react.</p>
         </div>
 
         {error ? <div className="notice">{error}</div> : null}

@@ -4,7 +4,7 @@
     "jsx": "react-jsx",
     "types": ["vitest/globals"],
     "paths": {
-      "codex-pets-core": ["../core/src/index.ts"]
+      "codex-pet-web": ["../core/src/index.ts"]
     }
   },
   "include": ["src", "test", "vitest.config.ts"],

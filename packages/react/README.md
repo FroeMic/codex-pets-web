@@ -1,11 +1,11 @@
-# codex-pets-react
+# codex-pet-web-react
 
 React wrapper for Codex pet spritesheets.
 
 ## Install
 
 ```bash
-npm install codex-pets-react codex-pets-core
+npm install codex-pet-web-react codex-pet-web
 ```
 
 `react` is a peer dependency.
@@ -13,7 +13,7 @@ npm install codex-pets-react codex-pets-core
 ## Basic Usage
 
 ```tsx
-import { CodexPet } from "codex-pets-react";
+import { CodexPet } from "codex-pet-web-react";
 
 export function PetPreview() {
   return (
@@ -41,7 +41,7 @@ Use a ref for short-lived actions. Props remain the persistent source of truth.
 
 ```tsx
 import { useRef } from "react";
-import { CodexPet, type CodexPetHandle } from "codex-pets-react";
+import { CodexPet, type CodexPetHandle } from "codex-pet-web-react";
 
 export function ActionPet() {
   const pet = useRef<CodexPetHandle>(null);
@@ -59,7 +59,7 @@ export function ActionPet() {
 ```
 
 The component does not re-render every animation frame. It mounts one DOM node
-and lets `codex-pets-core` update background position directly.
+and lets `codex-pet-web` update background position directly.
 
 ## Accessibility
 

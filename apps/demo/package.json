@@ -9,8 +9,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "codex-pets-core": "^0.1.0",
-    "codex-pets-react": "^0.3.0",
+    "codex-pet-web": "^0.1.0",
+    "codex-pet-web-react": "^0.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

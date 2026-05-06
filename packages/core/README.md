@@ -1,17 +1,17 @@
-# codex-pets-core
+# codex-pet-web
 
 Dependency-free TypeScript engine for Codex pet spritesheets.
 
 ## Install
 
 ```bash
-npm install codex-pets-core
+npm install codex-pet-web
 ```
 
 ## Basic DOM Usage
 
 ```ts
-import { createCodexPetElement } from "codex-pets-core";
+import { createCodexPetElement } from "codex-pet-web";
 
 const { element, animator } = createCodexPetElement({
   spritesheetUrl: "/pets/vertical/spritesheet.webp",
@@ -26,7 +26,7 @@ animator.play("waving", { loops: 1 });
 ## Pure Frame Math
 
 ```ts
-import { getPetFrameStyle } from "codex-pets-core";
+import { getPetFrameStyle } from "codex-pet-web";
 
 const style = getPetFrameStyle({
   spritesheetUrl: "/pets/vertical/spritesheet.webp",

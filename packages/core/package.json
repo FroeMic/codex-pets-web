@@ -1,5 +1,5 @@
 {
-  "name": "codex-pets-core",
+  "name": "codex-pet-web",
   "version": "0.1.0",
   "description": "Dependency-free TypeScript engine for Codex pet spritesheets.",
   "license": "MIT",
