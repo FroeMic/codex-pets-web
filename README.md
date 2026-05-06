@@ -126,6 +126,39 @@ const sapling = CODEX_PET_EXAMPLES.find((pet) => pet.id === "sapling");
 `manifestPath` and `spritesheetPath` are package-relative paths. Convert them to
 public URLs based on where your app copies the assets.
 
+## How To Get A Codex Pet
+
+You can use the bundled pets, copy pets from another project, or create your
+own with the
+[hatch-pet skill](https://github.com/openai/skills/tree/main/skills/.curated/hatch-pet).
+
+A simple Codex flow:
+
+```text
+Install the hatch-pet skill in this Codex environment and help me create a new custom pet.
+```
+
+Then describe the pet:
+
+```text
+Make me a custom pet named Firetail. It should be a tiny friendly flame-tailed lizard companion. Make it cute, original, and suitable as a Codex digital pet.
+```
+
+When Codex asks for confirmation, let it finish the spritesheet and retry any
+failed rows. The finished pet should be a folder with:
+
+```text
+pet.json
+spritesheet.webp
+```
+
+To test it in this repo, place the pet folder in `~/.codex/pets`, then run:
+
+```bash
+npm run copy:pets
+npm run dev
+```
+
 ## Interactions
 
 Use persistent state for the pet's normal mood or activity:
