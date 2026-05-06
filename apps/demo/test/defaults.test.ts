@@ -16,6 +16,7 @@ describe("demo defaults", () => {
 
   it("allows pets to be downsized below the default", () => {
     expect(source).toContain('min="0.25"');
+    expect(source).toContain('step="0.05"');
   });
 
   it("uses a dotted canvas background", () => {

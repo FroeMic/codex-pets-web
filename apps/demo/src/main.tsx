@@ -145,7 +145,7 @@ function App() {
           <input
             max="4"
             min="0.25"
-            step="0.25"
+            step="0.05"
             type="range"
             value={scale}
             onChange={(event) => setScale(Number(event.target.value))}
