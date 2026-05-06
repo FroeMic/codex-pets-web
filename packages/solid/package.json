@@ -1,0 +1,36 @@
+{
+  "name": "codex-pet-web-solid",
+  "version": "0.3.1",
+  "description": "Solid wrapper for Codex pet spritesheets.",
+  "license": "MIT",
+  "author": "FroeMic",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FroeMic/codex-pets-web.git",
+    "directory": "packages/solid"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "sideEffects": false,
+  "publishConfig": { "access": "public" },
+  "scripts": {
+    "build": "tsc -b ../core tsconfig.json",
+    "prepack": "npm run build",
+    "typecheck": "tsc -b ../core tsconfig.json --pretty false",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "codex-pet-web": "^0.3.1"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.9.0"
+  }
+}
