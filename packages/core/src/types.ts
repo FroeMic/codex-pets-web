@@ -220,3 +220,28 @@ export interface CodexPetRegistry {
   list(): CodexPetController[];
   subscribe(listener: CodexPetRegistryListener): () => void;
 }
+
+export interface CodexPetRandomAction {
+  state: CodexPetState;
+  weight?: number;
+  loops?: number;
+}
+
+export interface CodexPetRandomActionTarget {
+  getSnapshot(): CodexPetSnapshot;
+  play(state: CodexPetState, options?: CodexPetPlayOptions): void;
+}
+
+export interface CodexPetRandomActionRunnerOptions {
+  actions: CodexPetRandomAction[];
+  averageIntervalSeconds: number;
+  minIntervalSeconds?: number;
+  maxIntervalSeconds?: number;
+  random?: () => number;
+}
+
+export interface CodexPetRandomActionRunner {
+  start(): void;
+  stop(): void;
+  destroy(): void;
+}

@@ -11,6 +11,7 @@ export { createCodexPetAnimator } from "./animator.js";
 export { createCodexPetDragController } from "./drag.js";
 export { createCodexPetElement } from "./dom.js";
 export { createCodexPetRegistry } from "./registry.js";
+export { createCodexPetRandomActionRunner } from "./random-actions.js";
 export {
   CODEX_PET_EXAMPLES,
   getCodexPetExample,
@@ -38,6 +39,10 @@ export type {
   CodexPetPosition,
   CodexPetRegistry,
   CodexPetRegistryListener,
+  CodexPetRandomAction,
+  CodexPetRandomActionRunner,
+  CodexPetRandomActionRunnerOptions,
+  CodexPetRandomActionTarget,
   CodexPetSetStateOptions,
   CodexPetSnapshot,
   CodexPetState,
