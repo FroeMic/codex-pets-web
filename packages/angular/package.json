@@ -1,0 +1,37 @@
+{
+  "name": "codex-pet-web-angular",
+  "version": "0.3.1",
+  "description": "Angular wrapper for Codex pet spritesheets.",
+  "license": "MIT",
+  "author": "FroeMic",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FroeMic/codex-pets-web.git",
+    "directory": "packages/angular"
+  },
+  "type": "module",
+  "module": "./dist/fesm2022/codex-pet-web-angular.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/fesm2022/codex-pet-web-angular.mjs"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "sideEffects": false,
+  "publishConfig": { "access": "public" },
+  "scripts": {
+    "build": "ng-packagr -p ng-package.json",
+    "prepack": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --pretty false",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "codex-pet-web": "^0.3.1",
+    "tslib": "^2.8.0"
+  },
+  "peerDependencies": {
+    "@angular/core": "^20.0.0"
+  }
+}
