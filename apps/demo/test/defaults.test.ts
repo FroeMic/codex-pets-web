@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -37,8 +37,17 @@ describe("demo defaults", () => {
     expect(styles).toContain("radial-gradient");
   });
 
-  it("builds production fixtures from bundled example pets", () => {
-    expect(fixtureScript).toContain('"packages", "core", "example-pets"');
+  it("builds production fixtures from lightweight demo pets", () => {
+    expect(fixtureScript).toContain('"apps", "demo", "fixture-pets"');
+
+    for (const petId of ["bandit", "carrot", "sapling"]) {
+      const petRoot = join(import.meta.dirname, "../fixture-pets", petId);
+
+      expect(existsSync(join(petRoot, "pet.json"))).toBe(true);
+      expect(statSync(join(petRoot, "spritesheet.webp")).size).toBeLessThan(
+        250_000
+      );
+    }
   });
 
   it("loads bundled examples along with local user pets in development", () => {
