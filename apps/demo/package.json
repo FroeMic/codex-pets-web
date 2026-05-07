@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "node ../../scripts/copy-fixture-pets.mjs && tsc -b tsconfig.json && vite build",
+    "build": "node ../../scripts/copy-fixture-pets.mjs && tsc -b ../../packages/core ../../packages/react tsconfig.json --force && vite build",
     "test": "vitest run test/defaults.test.ts",
-    "typecheck": "tsc -b tsconfig.json --pretty false"
+    "typecheck": "tsc -b ../../packages/core ../../packages/react tsconfig.json --force --pretty false"
   },
   "dependencies": {
     "codex-pet-web": "^0.3.1",

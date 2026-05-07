@@ -72,6 +72,34 @@ p {
   line-height: 1.5;
 }
 
+.github-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #2f6f63;
+  border-radius: 6px;
+  color: #174d43;
+  background: #eef8f4;
+  text-decoration: none;
+}
+
+.github-link span {
+  min-width: 0;
+  font-size: 13px;
+}
+
+.github-link strong {
+  font-size: 13px;
+}
+
+.github-link:focus-visible {
+  outline: 3px solid #2f6f63;
+  outline-offset: 3px;
+}
+
 label {
   display: grid;
   gap: 8px;

@@ -163,6 +163,16 @@ function App() {
           <p>Preview local Codex pet packages through codex-pet-web-react.</p>
         </div>
 
+        <a
+          className="github-link"
+          href="https://github.com/FroeMic/codex-pets-web"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <span>Add it to your app</span>
+          <strong>GitHub</strong>
+        </a>
+
         {error ? <div className="notice">{error}</div> : null}
 
         <label>
