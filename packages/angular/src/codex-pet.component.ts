@@ -148,12 +148,17 @@ export class CodexPetComponent implements AfterViewInit, OnChanges, OnDestroy {
       draggable: this.getDragConfig(),
       preload: this.preload,
       onReady: () => this.ready.emit(),
-      onError: (event) => this.petError.emit(event),
-      onStateChange: (event) => this.stateChange.emit(event),
-      onAnimationStart: (event) => this.animationStart.emit(event),
-      onAnimationLoop: (event) => this.animationLoop.emit(event),
-      onAnimationEnd: (event) => this.animationEnd.emit(event),
-      onFrameChange: (event) => this.frameChange.emit(event)
+      onError: (event: CodexPetErrorEvent) => this.petError.emit(event),
+      onStateChange: (event: CodexPetStateChangeEvent) =>
+        this.stateChange.emit(event),
+      onAnimationStart: (event: CodexPetAnimationEvent) =>
+        this.animationStart.emit(event),
+      onAnimationLoop: (event: CodexPetAnimationEvent) =>
+        this.animationLoop.emit(event),
+      onAnimationEnd: (event: CodexPetAnimationEvent) =>
+        this.animationEnd.emit(event),
+      onFrameChange: (event: CodexPetAnimationEvent) =>
+        this.frameChange.emit(event)
     });
   }
 
@@ -167,15 +172,15 @@ export class CodexPetComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     return {
       ...userOptions,
-      onDragStart: (event) => {
+      onDragStart: (event: CodexPetDragEvent) => {
         userOptions?.onDragStart?.(event);
         this.petDragStart.emit(event);
       },
-      onDrag: (event) => {
+      onDrag: (event: CodexPetDragEvent) => {
         userOptions?.onDrag?.(event);
         this.petDrag.emit(event);
       },
-      onDragEnd: (event) => {
+      onDragEnd: (event: CodexPetDragEvent) => {
         userOptions?.onDragEnd?.(event);
         this.petDragEnd.emit(event);
       }

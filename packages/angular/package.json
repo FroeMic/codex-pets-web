@@ -19,7 +19,7 @@
   "scripts": {
     "build": "npm run build -w codex-pet-web && ng-packagr -p ng-package.json",
     "prepack": "npm run build",
-    "typecheck": "tsc -p tsconfig.json --pretty false",
+    "typecheck": "tsc -b ../core tsconfig.json --force --pretty false",
     "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
