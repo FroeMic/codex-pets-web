@@ -40,7 +40,7 @@ describe("demo defaults", () => {
   it("builds production fixtures from lightweight demo pets", () => {
     expect(fixtureScript).toContain('"apps", "demo", "fixture-pets"');
 
-    for (const petId of ["bandit", "carrot", "sapling"]) {
+    for (const petId of ["bandit", "carrot", "pinchy", "sapling"]) {
       const petRoot = join(import.meta.dirname, "../fixture-pets", petId);
 
       expect(existsSync(join(petRoot, "pet.json"))).toBe(true);
