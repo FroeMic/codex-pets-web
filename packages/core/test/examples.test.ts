@@ -6,11 +6,12 @@ import {
 } from "../src/example-pets";
 
 describe("bundled example pets", () => {
-  it("ships the tree, carrot, and raccoon examples with package assets", () => {
+  it("ships the tree, carrot, raccoon, and lobster examples with package assets", () => {
     expect(CODEX_PET_EXAMPLES.map((pet) => pet.id)).toEqual([
       "sapling",
       "carrot",
-      "bandit"
+      "bandit",
+      "pinchy"
     ]);
 
     for (const pet of CODEX_PET_EXAMPLES) {
